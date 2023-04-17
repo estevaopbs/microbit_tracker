@@ -29,12 +29,12 @@ if __name__ == '__main__':
     ADDRESS1 = 'F6:8C:51:58:97:63'
     microbit_0 = KaspersMicrobit(ADDRESS)
     microbit_1 = KaspersMicrobit(ADDRESS1)
-    microbit_0.connect()
-    # microbit_1.connect()
-    microbit_0.magnetometer.calibrate()
-    result = record_microbits(microbit_0,
+    #microbit_0.connect()
+    microbit_1.connect()
+
+    result = record_microbits(microbit_1,
                               characteristics=[Characteristic.MAGNETOMETER],
                               time_length=300, verbose=True)
     for n, data in enumerate(result):
         microbit_data_to_dataframe(data).to_excel(
-            'microbit_data_0C.xlsx', index=False)
+            'microbit_data_0.xlsx', index=False)

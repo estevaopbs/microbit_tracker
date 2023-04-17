@@ -4,7 +4,7 @@ import numpy as np
 import random
 
 
-sample_rate = 0.5
+sample_rate = 1
 data = pd.read_excel('microbit_data_0.xlsx', 0, usecols="A:C")
 vecs = []
 for row in data.iterrows():
