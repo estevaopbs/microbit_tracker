@@ -91,3 +91,4 @@ class JointTracker:
                           [np.sin(gama), 0, np.cos(gama)]])
         for vector in vectors:
             rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
+        self.vectors = rot_vectors
