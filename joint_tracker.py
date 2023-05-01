@@ -1,20 +1,22 @@
+from os import system
 from time import sleep
 from typing import List
 
 import numpy as np
 from kaspersmicrobit import KaspersMicrobit
 from kaspersmicrobit.services.leddisplay import Image
-from os import system
 
 
 def get_angle(v1, v2):
-    dot_product = np.dot(v1, v2)
     v1_mag = np.linalg.norm(v1)
     v2_mag = np.linalg.norm(v2)
-    cos_angle = dot_product / (v1_mag * v2_mag)
+    v1_unit = v1 / v1_mag
+    v2_unit = v2 / v2_mag
+    print(v1_unit, v2_unit)
+    cos_angle = np.dot(v1_unit, v2_unit)
     angle = np.arccos(cos_angle)
-    cross_product = np.cross(v1, v2)
-    if int(cross_product) < 0:
+    cross_product = np.cross(v1_unit, v2_unit)
+    if int(cross_product) > 0:
         angle = 2 * np.pi - angle
     return angle
 
@@ -79,8 +81,8 @@ class JointTracker:
             theta = get_angle(northn_yz, np.array(
                 [-1, 0]))
             print(f"Ângulo: {np.degrees(theta)}")
-            r = np.array([[1, 0, 0], [0, np.cos(theta), np.sin(theta)],
-                         [0, -np.sin(theta), np.cos(theta)]])  # testar matriz de rotação no sentido oposto
+            r = np.array([[1, 0, 0], [0, np.cos(-theta), -np.sin(-theta)],
+                         [0, np.sin(-theta), np.cos(-theta)]])  # testar matriz de rotação no sentido oposto
             narm_vector = np.dot(
                 r, np.array([0, north0[1], north0[2]]))\
                 / np.linalg.norm(north0_yz)
