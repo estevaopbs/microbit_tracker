@@ -23,8 +23,6 @@ class JointAnimation:
         self.ax.set_ylim(self.xyz_lim[1])
         self.ax.set_zlim(self.xyz_lim[2])
         last_point = np.array([0, 0, 0])
-        self.ax.quiver(*np.array([0, 0, 0]),
-                       *self.joint_tracker.vectors[0] * -self.lengths[0])
         for vector, length in zip(self.joint_tracker.vectors, self.lengths):
             self.ax.quiver(*last_point,
                            *vector * length)
