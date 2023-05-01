@@ -26,7 +26,7 @@ class JointAnimation:
         for vector, length in zip(self.joint_tracker.vectors, self.lengths):
             self.ax.quiver(*last_point,
                            *vector * length)
-            last_point = last_point + vector * length
+            last_point += vector * length
         return
 
     def animate(self):

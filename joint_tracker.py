@@ -4,6 +4,7 @@ from typing import List
 import numpy as np
 from kaspersmicrobit import KaspersMicrobit
 from kaspersmicrobit.services.leddisplay import Image
+from os import system
 
 
 def get_angle(v1, v2):
@@ -23,6 +24,7 @@ class JointTracker:
         self.microbits = self.get_connection(microbits)
         self.vectors: List[np.ndarray(shape=3, dtype=float)] = []
         self.gravity_north_angle = None
+
         # self.startup()
 
     def startup(self):
@@ -65,19 +67,25 @@ class JointTracker:
         return connected_kms
 
     def update(self):
+        system('cls')
         vectors = [np.array([0, -1, 0])]
         north0 = self._get_magnetometer(self.microbits[0])
+        print(f'Norte braço: {north0/np.linalg.norm(north0)}')
         north0_yz = np.array([north0[1], north0[2]])
         for microbit in self.microbits[1:]:
             northn = self._get_magnetometer(microbit)
+            print(f'Norte antebraço: {northn/np.linalg.norm(northn)}')
             northn_yz = np.array([northn[1], northn[2]])
             theta = get_angle(northn_yz, np.array(
                 [-1, 0]))
+            print(f"Ângulo: {np.degrees(theta)}")
             r = np.array([[1, 0, 0], [0, np.cos(theta), np.sin(theta)],
                          [0, -np.sin(theta), np.cos(theta)]])  # testar matriz de rotação no sentido oposto
             narm_vector = np.dot(
-                r, np.array([0, north0[1], north0[2]]) / np.linalg.norm(north0_yz))
+                r, np.array([0, north0[1], north0[2]]))\
+                / np.linalg.norm(north0_yz)
             vectors.append(narm_vector)
+            print(f'Vetor antebraço: {narm_vector}')
         self.vectors = vectors
         # rot_vectors = []
         # north0_xy = np.array([north0[0], north0[1]])
