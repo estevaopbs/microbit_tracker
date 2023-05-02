@@ -12,11 +12,10 @@ def get_angle(v1, v2):
     v2_mag = np.linalg.norm(v2)
     v1_unit = v1 / v1_mag
     v2_unit = v2 / v2_mag
-    print(v1_unit, v2_unit)
     cos_angle = np.dot(v1_unit, v2_unit)
     angle = np.arccos(cos_angle)
     cross_product = np.cross(v1_unit, v2_unit)
-    if int(cross_product) > 0:
+    if float(cross_product) < 0:
         angle = 2 * np.pi - angle
     return angle
 
@@ -72,22 +71,18 @@ class JointTracker:
         system('cls')
         vectors = [np.array([0, -1, 0])]
         north0 = self._get_magnetometer(self.microbits[0])
-        print(f'Norte braço: {north0/np.linalg.norm(north0)}')
         north0_yz = np.array([north0[1], north0[2]])
         for microbit in self.microbits[1:]:
             northn = self._get_magnetometer(microbit)
-            print(f'Norte antebraço: {northn/np.linalg.norm(northn)}')
             northn_yz = np.array([northn[1], northn[2]])
             theta = - get_angle(northn_yz, np.array(
                 [-1, 0]))
-            print(f"Ângulo: {np.degrees(theta)}")
             r = np.array([[1, 0, 0], [0, np.cos(theta), -np.sin(theta)],
                          [0, np.sin(theta), np.cos(theta)]])  # testar matriz de rotação no sentido oposto
             narm_vector = np.dot(
                 r, np.array([0, north0[1], north0[2]]))\
                 / np.linalg.norm(north0_yz)
             vectors.append(narm_vector)
-            print(f'Vetor antebraço: {narm_vector}')
         self.vectors = vectors
         # rot_vectors = []
         # north0_xy = np.array([north0[0], north0[1]])
