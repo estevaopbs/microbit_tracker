@@ -81,8 +81,8 @@ class JointTracker:
             theta = get_angle(northn_yz, np.array(
                 [-1, 0]))
             print(f"Ângulo: {np.degrees(theta)}")
-            r = np.array([[1, 0, 0], [0, np.cos(-theta), -np.sin(-theta)],
-                         [0, np.sin(-theta), np.cos(-theta)]])  # testar matriz de rotação no sentido oposto
+            r = np.array([[1, 0, 0], [0, np.cos(theta), -np.sin(theta)],
+                         [0, np.sin(theta), np.cos(theta)]])  # testar matriz de rotação no sentido oposto
             narm_vector = np.dot(
                 r, np.array([0, north0[1], north0[2]]))\
                 / np.linalg.norm(north0_yz)
