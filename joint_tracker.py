@@ -75,8 +75,7 @@ class JointTracker:
         for microbit in self.microbits[1:]:
             northn = self._get_magnetometer(microbit)
             northn_yz = np.array([northn[1], northn[2]])
-            theta = - get_angle(northn_yz, np.array(
-                [-1, 0]))
+            theta = get_angle(np.array([-1, 0]), northn_yz)
             r = np.array([[1, 0, 0], [0, np.cos(theta), -np.sin(theta)],
                          [0, np.sin(theta), np.cos(theta)]])  # testar matriz de rotação no sentido oposto
             narm_vector = np.dot(
