@@ -78,7 +78,7 @@ class JointTracker:
             northn = self._get_magnetometer(microbit)
             print(f'Norte antebraço: {northn/np.linalg.norm(northn)}')
             northn_yz = np.array([northn[1], northn[2]])
-            theta = get_angle(northn_yz, np.array(
+            theta = - get_angle(northn_yz, np.array(
                 [-1, 0]))
             print(f"Ângulo: {np.degrees(theta)}")
             r = np.array([[1, 0, 0], [0, np.cos(theta), -np.sin(theta)],
