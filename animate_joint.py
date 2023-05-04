@@ -1,7 +1,6 @@
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
-
 from joint_tracker import JointTracker
 
 

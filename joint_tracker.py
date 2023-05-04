@@ -35,8 +35,16 @@ class JointTracker:
     def __init__(self, *microbits: str | KaspersMicrobit):
         self.microbits = self.get_connection(microbits)
         self.vectors = []
-        self.angles = []
         self.gravity_north_angle = None
+
+    @property
+    def angles_ref0(self):
+        return [get_angle(vector, self.vectors[0]) for vector in self.vectors]
+
+    @property
+    def angles_refn(self):
+        return [get_angle(vector, self.vectors[n]) for n, vector in
+                enumerate(self.vectors[1:])]
 
     def startup(self):
         for image in (Image.CLOCK1, Image.CLOCK2, Image.CLOCK3,
@@ -50,17 +58,17 @@ class JointTracker:
             self._get_accelerometer(self.microbits[0])
         )
 
-    @staticmethod
+    @ staticmethod
     def _get_accelerometer(mb: KaspersMicrobit):
         data = mb.accelerometer.read()
-        return np.array([data.x, data.y, data.z], dtype=np.int16)
+        return np.array([data.x, data.y, data.z])
 
-    @staticmethod
+    @ staticmethod
     def _get_magnetometer(mb: KaspersMicrobit):
         data = mb.magnetometer.read_data()
-        return np.array([data.x, data.y, data.z], dtype=np.int16)
+        return np.array([data.x, data.y, data.z])
 
-    @staticmethod
+    @ staticmethod
     def get_connection(microbits: List[KaspersMicrobit | str]):
         connected_kms: List[KaspersMicrobit] = []
         for microbit in microbits:
@@ -111,7 +119,7 @@ class JointTracker:
             # por um ângulo theta
             r = np.array([[1, 0, 0],
                           [0, np.cos(theta), np.sin(theta)],
-                         [0, -np.sin(theta), np.cos(theta)]])
+                          [0, -np.sin(theta), np.cos(theta)]])
 
             # Aplica a rotação r na projeção do vetor norte no plano yz no
             # sistema de coordenadas do microbit do primeiro segmento do braço
@@ -123,6 +131,10 @@ class JointTracker:
 
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
+
+        # Printa os angulos no terminal
+        system('cls')
+        print([np.degrees(x) for x in self.angles_refn])
 
         # Daqui pra baixo é apenas um sonho distante
         # rot_vectors = []
