@@ -39,11 +39,11 @@ class JointTracker:
 
     @property
     def angles_ref0(self):
-        return [get_angle(vector, self.vectors[0]) for vector in self.vectors]
+        return [get_angle([vector[1], vector[2]], [self.vectors[0][1], self.vectors[0][2]]) for vector in self.vectors]
 
     @property
     def angles_refn(self):
-        return [get_angle(vector, self.vectors[n]) for n, vector in
+        return [get_angle([vector[1], vector[2]], [self.vectors[n][1], self.vectors[n][2]]) for n, vector in
                 enumerate(self.vectors[1:])]
 
     def startup(self):
