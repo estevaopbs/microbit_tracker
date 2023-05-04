@@ -58,17 +58,17 @@ class JointTracker:
             self._get_accelerometer(self.microbits[0])
         )
 
-    @ staticmethod
+    @staticmethod
     def _get_accelerometer(mb: KaspersMicrobit):
         data = mb.accelerometer.read()
         return np.array([data.x, data.y, data.z])
 
-    @ staticmethod
+    @staticmethod
     def _get_magnetometer(mb: KaspersMicrobit):
         data = mb.magnetometer.read_data()
         return np.array([data.x, data.y, data.z])
 
-    @ staticmethod
+    @staticmethod
     def get_connection(microbits: List[KaspersMicrobit | str]):
         connected_kms: List[KaspersMicrobit] = []
         for microbit in microbits:
