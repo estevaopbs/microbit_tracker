@@ -96,7 +96,7 @@ class JointTracker:
         north_diffs = []
         angles_ref0 = []
         angles_refn = []
-        vectors = [np.array([0, -1, 0])]
+        vectors = []
 
         # Define o vetor norte do primeiro segmento
         north0 = self._get_magnetometer(self.microbits[0])
