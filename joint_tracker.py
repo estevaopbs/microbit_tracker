@@ -123,9 +123,9 @@ class JointTracker:
 
             north_diffs.append(get_angle(np.array([-1, 0]), northn_yz))
 
-            angles_ref0.append(2 * np.pi + (north_diffs[-2] - north_diffs[-1]))
+            angles_ref0.append(2 * np.pi - (north_diffs[-2] - north_diffs[-1]))
 
-            angles_refn.append(2 * np.pi + (north_diffs[-2] - north_diffs[-1]))
+            angles_refn.append(2 * np.pi - (north_diffs[-2] - north_diffs[-1]))
 
             vectors.append(
                 np.array([0, -np.cos(angles_ref0[-1]), np.sin(angles_ref0[-1])])
