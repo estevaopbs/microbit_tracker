@@ -11,7 +11,7 @@ class JointAnimation:
         self.frames = frames
         self.frame = 0
         self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111, projection='3d')
+        self.ax = self.fig.add_subplot(111, projection="3d")
         self.xyz_lim = xyz_lim
 
     def update(self, frame):
@@ -23,12 +23,12 @@ class JointAnimation:
         self.ax.set_zlim(self.xyz_lim[2])
         last_point = np.array([0, 0, 0])
         for vector, length in zip(self.joint_tracker.vectors, self.lengths):
-            self.ax.quiver(*last_point,
-                           *vector * length)
+            self.ax.quiver(*last_point, *vector * length)
             last_point = last_point + vector * length
         return
 
     def animate(self):
-        self.animation = animation.FuncAnimation(self.fig, self.update, repeat=False,
-                                                 frames=self.frames)
+        self.animation = animation.FuncAnimation(
+            self.fig, self.update, repeat=False, frames=self.frames
+        )
         plt.show()
