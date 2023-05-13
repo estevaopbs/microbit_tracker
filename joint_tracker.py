@@ -170,5 +170,5 @@ class JointTracker:
         )
         for vector in vectors:
             # rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
-            rot_vectors.append(rphi, vector)
+            rot_vectors.append(rgama, vector)
         self.vectors = rot_vectors
