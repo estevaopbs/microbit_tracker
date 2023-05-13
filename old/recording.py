@@ -1,10 +1,11 @@
-from enum import IntEnum
 import time
+from enum import IntEnum
+from os import system
 from typing import Dict, Iterable
+
 import numpy as np
 from kaspersmicrobit import KaspersMicrobit
 from mb_angles import get_angles
-from os import system
 
 
 class Characteristic(IntEnum):

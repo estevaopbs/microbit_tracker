@@ -10,7 +10,6 @@ from kaspersmicrobit.services.leddisplay import Image
 # Recebe dois vetores bidimensionais e calcula o ângulo entre eles no
 # sentido antihorário
 def get_angle(v1, v2):
-
     # Normaliza os vetores
     v1_unit = v1 / np.linalg.norm(v1)
     v2_unit = v2 / np.linalg.norm(v2)
@@ -39,23 +38,38 @@ class JointTracker:
 
     @property
     def angles_ref0(self):
-        return [get_angle([vector[1], vector[2]], [self.vectors[0][1], self.vectors[0][2]]) for vector in self.vectors]
+        return [
+            get_angle([vector[1], vector[2]], [self.vectors[0][1], self.vectors[0][2]])
+            for vector in self.vectors
+        ]
 
     @property
     def angles_refn(self):
-        return [get_angle([vector[1], vector[2]], [self.vectors[n][1], self.vectors[n][2]]) for n, vector in
-                enumerate(self.vectors[1:])]
+        return [
+            get_angle([vector[1], vector[2]], [self.vectors[n][1], self.vectors[n][2]])
+            for n, vector in enumerate(self.vectors[1:])
+        ]
 
     def startup(self):
-        for image in (Image.CLOCK1, Image.CLOCK2, Image.CLOCK3,
-                      Image.CLOCK4, Image.CLOCK5, Image.CLOCK6, Image.CLOCK7,
-                      Image.CLOCK8, Image.CLOCK9, Image.CLOCK10, Image.CLOCK11,
-                      Image.CLOCK12):
+        for image in (
+            Image.CLOCK1,
+            Image.CLOCK2,
+            Image.CLOCK3,
+            Image.CLOCK4,
+            Image.CLOCK5,
+            Image.CLOCK6,
+            Image.CLOCK7,
+            Image.CLOCK8,
+            Image.CLOCK9,
+            Image.CLOCK10,
+            Image.CLOCK11,
+            Image.CLOCK12,
+        ):
             self.arm_mb.led.show(image)
             sleep(1)
         self.gravity_north_angle = get_angle(
             self._get_magnetometer(self.microbits[0]),
-            self._get_accelerometer(self.microbits[0])
+            self._get_accelerometer(self.microbits[0]),
         )
 
     @staticmethod
@@ -82,12 +96,12 @@ class JointTracker:
                     connected_kms.append(_microbit)
                 case _:
                     raise TypeError(
-                        f'Invalid type of {microbit}, it should be either KaspersMicrobit or str.')
+                        f"Invalid type of {microbit}, it should be either KaspersMicrobit or str."
+                    )
         return connected_kms
 
     # Atualiza os vetores para o estado atual
     def update(self):
-
         # Define o vetor no sistema de coordenadas do primeiro segmento da
         # articulação como [0,-1,0].
         vectors = [np.array([0, -1, 0])]
@@ -99,11 +113,10 @@ class JointTracker:
         north0_yz = np.array([north0[1], north0[2]])
 
         # Normaliza a projeção do vetor norte no plano yz
-        north0_yz = north0_yz/np.linalg.norm(north0_yz)
+        north0_yz = north0_yz / np.linalg.norm(north0_yz)
 
         # Executa para cada segmento do braço após o primeiro
         for microbit in self.microbits[1:]:
-
             # Define o vetor norte no sistema de coordenadas do microbit deste
             # segmento
             northn = self._get_magnetometer(microbit)
@@ -117,14 +130,17 @@ class JointTracker:
 
             # Cria a matriz de rotação em torno do eixo x no sentido horário
             # por um ângulo theta
-            r = np.array([[1, 0, 0],
-                          [0, np.cos(theta), np.sin(theta)],
-                          [0, -np.sin(theta), np.cos(theta)]])
+            r = np.array(
+                [
+                    [1, 0, 0],
+                    [0, np.cos(theta), np.sin(theta)],
+                    [0, -np.sin(theta), np.cos(theta)],
+                ]
+            )
 
             # Aplica a rotação r na projeção do vetor norte no plano yz no
             # sistema de coordenadas do microbit do primeiro segmento do braço
-            narm_vector = np.dot(
-                r, np.array([0, north0_yz[0], north0_yz[1]]))
+            narm_vector = np.dot(r, np.array([0, north0_yz[0], north0_yz[1]]))
 
             # Adiciona o vetor resultante à lista de vetores
             vectors.append(narm_vector)
@@ -133,21 +149,22 @@ class JointTracker:
         self.vectors = vectors
 
         # Printa os angulos no terminal
-        system('cls')
+        system("cls")
         print([np.degrees(x) for x in self.angles_refn])
 
         # Daqui pra baixo é apenas um sonho distante
-        # rot_vectors = []
-        # north0_xy = np.array([north0[0], north0[1]])
-        # phi = get_angle(north0_xy, np.array([0, 1]))
-        # rphi = np.array([[np.cos(phi), np.sin(phi), 0],
-        #                 [-np.sin(phi), np.cos(phi), 0],
-        #                 [0, 0, 1]])
+        rot_vectors = []
+        north0_xy = np.array([north0[0], north0[1]])
+        phi = get_angle(north0_xy, np.array([0, 1]))
+        rphi = np.array(
+            [[np.cos(phi), np.sin(phi), 0], [-np.sin(phi), np.cos(phi), 0], [0, 0, 1]]
+        )
         # north0_xz = np.array([north0[0], north0[2]])
         # gama = get_angle(north0_xz, np.array([0, 1]))
         # rgama = np.array([[np.cos(gama), 0, -np.sin(gama)],
         #                  [0, 1, 0],
         #                  [np.sin(gama), 0, np.cos(gama)]])
-        # for vector in vectors:
-        #    rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
+        for vector in vectors:
+            #    rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
+            rot_vectors.append(np.dot(rphi, vector))
         # self.vectors = rot_vectors
