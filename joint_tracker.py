@@ -159,16 +159,15 @@ class JointTracker:
         rphi = np.array(
             [[np.cos(phi), -np.sin(phi), 0], [np.sin(phi), np.cos(phi), 0], [0, 0, 1]]
         )
-        north0_xz = np.array([north0[0], north0[2]])
-        gama = get_angle(north0_xz, np.array([0, -1]))
+        north0_yz = np.array([north0[1], north0[2]])
+        gama = get_angle(north0_yz, np.array([0, -1]))
         rgama = np.array(
             [
-                [np.cos(gama), 0, np.sin(gama)],
-                [0, 1, 0],
-                [-np.sin(gama), 0, np.cos(gama)],
+                [1, 0, 0],
+                [0, np.cos(gama), -np.sin(gama)],
+                [0, np.sin(gama), np.cos(gama)],
             ]
         )
         for vector in vectors:
-            # rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
-            rot_vectors.append(np.dot(rphi, vector))
+            rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
         self.vectors = rot_vectors
