@@ -31,6 +31,7 @@ def get_angle(v1, v2):
 
 
 class JointTracker:
+    fixed_north = np.array([0, 1, 0])
     def __init__(self, *microbits: str | KaspersMicrobit):
         self.microbits = self.get_connection(microbits)
         self.vectors = []
@@ -101,19 +102,35 @@ class JointTracker:
         return connected_kms
 
     # Atualiza os vetores para o estado atual
+    
+    @staticmethod
+    def get_north_rotated_vector(vector, north0, fixed_north):
+        
+    
     def update(self):
         # Define o vetor no sistema de coordenadas do primeiro segmento da
         # articulação como [0,-1,0].
-        vectors = [np.array([0, -1, 0])]
+        vectors = []
 
         # Define o vetor norte do braço
         north0 = self._get_magnetometer(self.microbits[0])
 
-        # Projeta o vetor norte do braço no plano yz (plano do braço)
+        
+        north0_xy = np.array([north0[0], north0[1]])
+        phi = get_angle(north0_xy, np.array([0, -1]))
+        rphi = np.array(
+            [[np.cos(phi), -np.sin(phi), 0], [np.sin(phi), np.cos(phi), 0], [0, 0, 1]]
+        )
+        
         north0_yz = np.array([north0[1], north0[2]])
-
-        # Normaliza a projeção do vetor norte no plano yz
-        north0_yz = north0_yz / np.linalg.norm(north0_yz)
+        gama = get_angle(north0_yz, np.array([0, -1]))
+        rgama = np.array(
+            [
+                [1, 0, 0],
+                [0, np.cos(gama), -np.sin(gama)],
+                [0, np.sin(gama), np.cos(gama)],
+            ]
+        )
 
         # Executa para cada segmento do braço após o primeiro
         for microbit in self.microbits[1:]:
@@ -154,20 +171,8 @@ class JointTracker:
 
         # Daqui pra baixo é apenas um sonho distante
         rot_vectors = []
-        north0_xy = np.array([north0[0], north0[1]])
-        phi = get_angle(north0_xy, np.array([0, -1]))
-        rphi = np.array(
-            [[np.cos(phi), -np.sin(phi), 0], [np.sin(phi), np.cos(phi), 0], [0, 0, 1]]
-        )
-        north0_yz = np.array([north0[1], north0[2]])
-        gama = get_angle(north0_yz, np.array([0, -1]))
-        rgama = np.array(
-            [
-                [1, 0, 0],
-                [0, np.cos(gama), -np.sin(gama)],
-                [0, np.sin(gama), np.cos(gama)],
-            ]
-        )
+        
+        
         for vector in vectors:
             rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
         self.vectors = rot_vectors
