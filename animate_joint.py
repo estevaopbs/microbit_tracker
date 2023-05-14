@@ -25,7 +25,7 @@ class JointAnimation:
         for vector, length in zip(self.joint_tracker.vectors, self.lengths):
             self.ax.quiver(*last_point, *vector * length)
             last_point = last_point + vector * length
-        self.ax.quiver([0, 0, 0], self.joint_tracker.fixed_north, color="red")
+        self.ax.quiver(*[0, 0, 0], *self.joint_tracker.fixed_north, color="red")
         return
 
     def animate(self):
