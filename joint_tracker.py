@@ -32,6 +32,7 @@ def get_angle(v1, v2):
 
 class JointTracker:
     fixed_north = np.array([0, 1, 0])
+
     def __init__(self, *microbits: str | KaspersMicrobit):
         self.microbits = self.get_connection(microbits)
         self.vectors = []
@@ -102,77 +103,41 @@ class JointTracker:
         return connected_kms
 
     # Atualiza os vetores para o estado atual
-    
+
     @staticmethod
-    def get_north_rotated_vector(vector, north0, fixed_north):
-        
-    
+    def get_vector(north, fixed_north):
+        north_xy = np.array([north[0], north[1]])
+
+        theta = get_angle(north_xy, np.array([0, -1]))
+        rtheta = np.array(
+            [
+                [np.cos(theta), -np.sin(theta), 0],
+                [np.sin(theta), np.cos(theta), 0],
+                [0, 0, 1],
+            ]
+        )
+        north_yz = np.array([north[1], north[2]])
+        phi = get_angle(north_yz, np.array([-1, 0]))
+        rphi = np.array(
+            [
+                [1, 0, 0],
+                [0, np.cos(phi), -np.sin(phi)],
+                [0, np.sin(phi), np.cos(phi)],
+            ]
+        )
+        return np.dot(rphi, np.dot(rtheta, fixed_north))
+
     def update(self):
         # Define o vetor no sistema de coordenadas do primeiro segmento da
         # articulação como [0,-1,0].
         vectors = []
 
-        # Define o vetor norte do braço
-        north0 = self._get_magnetometer(self.microbits[0])
-
-        
-        north0_xy = np.array([north0[0], north0[1]])
-        phi = get_angle(north0_xy, np.array([0, -1]))
-        rphi = np.array(
-            [[np.cos(phi), -np.sin(phi), 0], [np.sin(phi), np.cos(phi), 0], [0, 0, 1]]
-        )
-        
-        north0_yz = np.array([north0[1], north0[2]])
-        gama = get_angle(north0_yz, np.array([0, -1]))
-        rgama = np.array(
-            [
-                [1, 0, 0],
-                [0, np.cos(gama), -np.sin(gama)],
-                [0, np.sin(gama), np.cos(gama)],
-            ]
-        )
-
         # Executa para cada segmento do braço após o primeiro
-        for microbit in self.microbits[1:]:
+        for microbit in self.microbits:
             # Define o vetor norte no sistema de coordenadas do microbit deste
             # segmento
-            northn = self._get_magnetometer(microbit)
-
-            # Projeta o vetor norte no plano yz no sistema de coordenadas do
-            # microbit deste segmento
-            northn_yz = np.array([northn[1], northn[2]])
-
-            # Encontra o ângulo entre o vetor -y e o vetor norte
-            theta = get_angle(np.array([-1, 0]), northn_yz)
-
-            # Cria a matriz de rotação em torno do eixo x no sentido horário
-            # por um ângulo theta
-            r = np.array(
-                [
-                    [1, 0, 0],
-                    [0, np.cos(theta), np.sin(theta)],
-                    [0, -np.sin(theta), np.cos(theta)],
-                ]
-            )
-
-            # Aplica a rotação r na projeção do vetor norte no plano yz no
-            # sistema de coordenadas do microbit do primeiro segmento do braço
-            narm_vector = np.dot(r, np.array([0, north0_yz[0], north0_yz[1]]))
-
-            # Adiciona o vetor resultante à lista de vetores
-            vectors.append(narm_vector)
+            north = self._get_magnetometer(microbit)
+            vectors.append(self.get_vector(north, self.fixed_north))
 
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
-
-        # Printa os angulos no terminal
-        system("cls")
-        print([np.degrees(x) for x in self.angles_refn])
-
-        # Daqui pra baixo é apenas um sonho distante
-        rot_vectors = []
-        
-        
-        for vector in vectors:
-            rot_vectors.append(np.dot(rgama, np.dot(rphi, vector)))
-        self.vectors = rot_vectors
