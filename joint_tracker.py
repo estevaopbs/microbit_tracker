@@ -145,7 +145,9 @@ class JointTracker:
             # segmento
             north = self._get_magnetometer(microbit)
             acc = self._get_magnetometer(microbit)
-            vectors.append(self.get_vector(north, acc, self.fixed_north))
+            vectors.append(
+                self.get_vector(north, acc, self.fixed_north, self.fixed_gravity)
+            )
 
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
