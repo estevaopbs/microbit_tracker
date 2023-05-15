@@ -24,14 +24,22 @@ def get_angle(v1, v2):
     # Encontra o seno do ângulo através do produto vetorial. Se o seno for
     # negativo (180 < ângulo < 360), então o ângulo é definido como
     # 360 - (ângulo encontrado por arcosseno).
-    cross_product = np.cross(v1_unit, v2_unit)
-    if float(cross_product) < 0:
+    if np.array(v1).shape[0] == 2:
+        cross_product = np.cross(v1_unit, v2_unit)
+        if float(cross_product) < 0:
+            angle = 2 * np.pi - angle
+        return angle
+    cross_product = np.cross(v1, v2)
+    if np.allclose(cross_product, [0, 0, 0]):
+        cross_product = 0
+    elif np.dot(cross_product, [0, 0, 1]) < 0:
         angle = 2 * np.pi - angle
     return angle
 
 
 class JointTracker:
     fixed_north = np.array([0, 1, 0])
+    fixed_gravity = np.array([0, 0, -1])
 
     def __init__(self, *microbits: str | KaspersMicrobit):
         self.microbits = self.get_connection(microbits)
@@ -105,9 +113,8 @@ class JointTracker:
     # Atualiza os vetores para o estado atual
 
     @staticmethod
-    def get_vector(north, fixed_north):
+    def get_vector(north, acc, fixed_north, fixed_gravity):
         north_xy = np.array([north[0], north[1]])
-
         theta = get_angle(north_xy, np.array([0, -1]))
         rtheta = np.array(
             [
@@ -116,8 +123,8 @@ class JointTracker:
                 [0, 0, 1],
             ]
         )
-        north_yz = np.array([north[1], north[2]])
-        phi = get_angle(north_yz, np.array([-1, 0]))
+        acc_yz = np.array([acc[1], acc[2]])
+        phi = get_angle(acc_yz, np.array([1, 0]))
         rphi = np.array(
             [
                 [1, 0, 0],
@@ -125,7 +132,7 @@ class JointTracker:
                 [0, np.sin(phi), np.cos(phi)],
             ]
         )
-        return np.dot(rphi, np.dot(rtheta, fixed_north))
+        return np.dot(rphi, np.dot(rtheta, fixed_gravity))
 
     def update(self):
         # Define o vetor no sistema de coordenadas do primeiro segmento da
@@ -137,7 +144,8 @@ class JointTracker:
             # Define o vetor norte no sistema de coordenadas do microbit deste
             # segmento
             north = self._get_magnetometer(microbit)
-            vectors.append(self.get_vector(north, self.fixed_north))
+            acc = self._get_magnetometer(microbit)
+            vectors.append(self.get_vector(north, acc, self.fixed_north))
 
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
