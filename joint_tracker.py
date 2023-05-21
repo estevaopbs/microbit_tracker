@@ -103,12 +103,9 @@ class JointTracker:
                     )
         return connected_kms
 
-    # Atualiza os vetores para o estado atual
-
     @staticmethod
     def get_vector(acc, fixed_gravity):
-        acc_yz = np.array([acc[0], acc[1]])
-
+        acc_yz = np.array([acc[1], acc[2]])
         theta = get_angle(acc_yz, np.array([1, 0]))
         rtheta = np.array(
             [
@@ -120,16 +117,10 @@ class JointTracker:
         return np.dot(rtheta, fixed_gravity)
 
     def update(self):
-        # Define o vetor no sistema de coordenadas do primeiro segmento da
-        # articulação como [0,-1,0].
         vectors = []
-
         # Executa para cada segmento do braço após o primeiro
         for microbit in self.microbits:
-            # Define o vetor norte no sistema de coordenadas do microbit deste
-            # segmento
             acc = self._get_accelerometer(microbit)
             vectors.append(self.get_vector(acc, self.fixed_gravity))
-
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
