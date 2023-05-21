@@ -26,6 +26,7 @@ class JointAnimation:
             self.ax.quiver(*last_point, *vector * length)
             last_point = last_point + vector * length
         self.ax.quiver(*[0, 0, 0], *self.joint_tracker.fixed_gravity, color="red")
+        self.ax.quiver(*[0, 0, 0], *self.joint_tracker.fixed_north, color="red")
         return
 
     def animate(self):

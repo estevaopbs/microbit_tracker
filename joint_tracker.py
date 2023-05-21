@@ -104,7 +104,7 @@ class JointTracker:
         return connected_kms
 
     @staticmethod
-    def get_vector(acc, fixed_gravity):
+    def get_vector(acc, fixed_gravity, zrotang):
         acc_yz = np.array([acc[1], acc[2]])
         theta = get_angle(acc_yz, np.array([1, 0]))
         rtheta = np.array(
@@ -114,13 +114,24 @@ class JointTracker:
                 [0, np.sin(theta), np.cos(theta)],
             ]
         )
-        return np.dot(rtheta, fixed_gravity)
+        rzrotang = np.array(
+            [
+                [np.cos(theta), -np.sin(theta), 0],
+                [np.sin(theta), np.cos(theta), 0],
+                [0, 0, 1],
+            ]
+        )
+        return np.dot(rzrotang, np.dot(rtheta, fixed_gravity))
 
     def update(self):
         vectors = []
         # Executa para cada segmento do braço após o primeiro
-        for microbit in self.microbits:
+        north = self._get_magnetometer(self.microbits[0])
+        northxy = np.array([north[0], north[1]])
+        phi = get_angle(northxy, np.array([0, -1]))
+        for microbit in self.microbits[1:]:
             acc = self._get_accelerometer(microbit)
-            vectors.append(self.get_vector(acc, self.fixed_gravity))
+            vectors.append(self.get_vector(acc, self.fixed_gravity, phi))
+
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
