@@ -129,7 +129,7 @@ class JointTracker:
         north = self._get_magnetometer(self.microbits[0])
         northxy = np.array([north[0], north[1]])
         phi = get_angle(northxy, np.array([0, -1]))
-        for microbit in self.microbits[1:]:
+        for microbit in self.microbits:
             acc = self._get_accelerometer(microbit)
             vectors.append(self.get_vector(acc, self.fixed_gravity, phi))
 
