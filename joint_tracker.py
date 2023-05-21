@@ -32,6 +32,7 @@ def get_angle(v1, v2):
 
 class JointTracker:
     fixed_north = np.array([0, 1, 0])
+    fixed_gravity = np.array([0, 0, -1])
 
     def __init__(self, *microbits: str | KaspersMicrobit):
         self.microbits = self.get_connection(microbits)
@@ -105,27 +106,18 @@ class JointTracker:
     # Atualiza os vetores para o estado atual
 
     @staticmethod
-    def get_vector(north, fixed_north):
-        north_xy = np.array([north[0], north[1]])
+    def get_vector(acc, fixed_gravity):
+        acc_yz = np.array([acc[0], acc[1]])
 
-        theta = get_angle(north_xy, np.array([0, -1]))
+        theta = get_angle(acc_yz, np.array([1, 0]))
         rtheta = np.array(
             [
-                [np.cos(theta), -np.sin(theta), 0],
-                [np.sin(theta), np.cos(theta), 0],
-                [0, 0, 1],
-            ]
-        )
-        north_yz = np.array([north[1], north[2]])
-        phi = get_angle(north_yz, np.array([-1, 0]))
-        rphi = np.array(
-            [
                 [1, 0, 0],
-                [0, np.cos(phi), -np.sin(phi)],
-                [0, np.sin(phi), np.cos(phi)],
+                [0, np.cos(theta), -np.sin(theta)],
+                [0, np.sin(theta), np.cos(theta)],
             ]
         )
-        return np.dot(rphi, np.dot(rtheta, fixed_north))
+        return np.dot(rtheta, fixed_gravity)
 
     def update(self):
         # Define o vetor no sistema de coordenadas do primeiro segmento da
@@ -136,8 +128,8 @@ class JointTracker:
         for microbit in self.microbits:
             # Define o vetor norte no sistema de coordenadas do microbit deste
             # segmento
-            north = self._get_magnetometer(microbit)
-            vectors.append(self.get_vector(north, self.fixed_north))
+            acc = self._get_accelerometer(microbit)
+            vectors.append(self.get_vector(acc, self.fixed_gravity))
 
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
