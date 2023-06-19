@@ -93,12 +93,11 @@ class JointTracker:
         self.latest_states = new_latest_states
         self.latest_states.append(state)
         system("cls")
-        print(state.vectors)
-        print(state.angles)
-        print(state.vectors)
-        print(state.speeds)
-        print(state.accs)
-        print(state.upd_time)
+        print("vectors: ", state.vectors)
+        print("angles (degrees):", [np.degrees(x) for x in state.angles])
+        print("angular speeds (rad/s):", state.speeds)
+        print("angular accelerations (rad/s²):", state.accs)
+        print("elapsed time:", state.upd_time)
 
     def start(self):
         self.start_time = time.time()
