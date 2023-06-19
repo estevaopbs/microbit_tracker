@@ -75,7 +75,7 @@ class JointTracker:
     def state(self):
         return self.latest_states[-1]
 
-    def dummy(self):
+    def dummy(self, dummyvar):
         pass
 
     def _record_state(self, state):
