@@ -2,6 +2,7 @@ from time import sleep
 from typing import List, Tuple
 import time
 import copy
+from os import system
 
 import numpy as np
 from kaspersmicrobit import KaspersMicrobit
@@ -91,6 +92,13 @@ class JointTracker:
             new_latest_states.remove(_state)
         self.latest_states = new_latest_states
         self.latest_states.append(state)
+        system("cls")
+        print(state.vectors)
+        print(state.angles)
+        print(state.vectors)
+        print(state.speeds)
+        print(state.accs)
+        print(state.upd_time)
 
     def start(self):
         self.start_time = time.time()
