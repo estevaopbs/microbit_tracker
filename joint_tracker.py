@@ -36,8 +36,8 @@ class JointTracker:
     fixed_gravity = np.array([0, 0, -1])
 
     class ArticulationState:
-        get_speeds = lambda x, y: 0
-        get_accs = lambda x, y: 0
+        get_speeds = lambda x, y: [0, 0]
+        get_accs = lambda x, y: [0, 0]
 
         def __init__(self, vectors, angles, upd_time, ref_state) -> None:
             self.vectors = vectors
