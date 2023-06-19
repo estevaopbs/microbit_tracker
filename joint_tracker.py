@@ -1,6 +1,7 @@
-from os import system
 from time import sleep
-from typing import List
+from typing import List, Tuple
+import time
+import copy
 
 import numpy as np
 from kaspersmicrobit import KaspersMicrobit
@@ -34,46 +35,67 @@ class JointTracker:
     fixed_north = np.array([0, 1, 0])
     fixed_gravity = np.array([0, 0, -1])
 
-    def __init__(self, *microbits: str | KaspersMicrobit):
-        self.microbits = self.get_connection(microbits)
-        self.vectors = []
-        self.gravity_north_angle = None
+    class ArticulationState:
+        get_speeds = lambda x, y: 0
+        get_accs = lambda x, y: 0
+
+        def __init__(self, vectors, angles, upd_time, ref_state) -> None:
+            self.vectors = vectors
+            self.angles = angles
+            self.upd_time = upd_time
+            self.speeds = JointTracker.ArticulationState.get_speeds(self, ref_state)
+            self.accs = JointTracker.ArticulationState.get_accs(self, ref_state)
+
+        @staticmethod
+        def _get_speeds(state0, state1):
+            speeds = []
+            for a0, a1 in zip(state0.angles, state1.angles):
+                speeds.append((a0 - a1) / (state0.upd_time) - (state1.upd_time))
+            return speeds
+
+        @staticmethod
+        def _get_accs(state0, state1):
+            accs = []
+            for a0, a1 in zip(state0.accs, state1.accs):
+                accs.append((a0 - a1) / (state0.upd_time) - (state1.upd_time))
+            return accs
+
+    def __init__(self, *microbits: str | KaspersMicrobit, calculation_time, record):
+        self.microbits: List[KaspersMicrobit] = self.get_connection(microbits)
+        self.vectors: List[np.ndarray] = []
+        self.update = self.start
+        self.start_time = None
+        self.record_state = self._record_state if record else self.dummy
+        self.states: List[self.ArticulationState] = []
+        self.latest_states: List[self.ArticulationState] = []
+        self.calculation_time = calculation_time
+        self.get_state = self.get_first_state
 
     @property
-    def angles_ref0(self):
-        return [
-            get_angle([vector[1], vector[2]], [self.vectors[0][1], self.vectors[0][2]])
-            for vector in self.vectors
-        ]
+    def state(self):
+        return self.latest_states[-1]
 
-    @property
-    def angles_refn(self):
-        return [
-            get_angle([vector[1], vector[2]], [self.vectors[n][1], self.vectors[n][2]])
-            for n, vector in enumerate(self.vectors[1:])
-        ]
+    def dummy(self):
+        pass
 
-    def startup(self):
-        for image in (
-            Image.CLOCK1,
-            Image.CLOCK2,
-            Image.CLOCK3,
-            Image.CLOCK4,
-            Image.CLOCK5,
-            Image.CLOCK6,
-            Image.CLOCK7,
-            Image.CLOCK8,
-            Image.CLOCK9,
-            Image.CLOCK10,
-            Image.CLOCK11,
-            Image.CLOCK12,
-        ):
-            self.arm_mb.led.show(image)
-            sleep(1)
-        self.gravity_north_angle = get_angle(
-            self._get_magnetometer(self.microbits[0]),
-            self._get_accelerometer(self.microbits[0]),
-        )
+    def _record_state(self, state):
+        self.states.append(state)
+
+    def update_states(self, state):
+        self.vectors = state.vectors
+        self.record_state(state)
+        new_latest_states = copy.copy(self.latest_states)
+        for _state in self.latest_states:
+            if state.upt_time - _state.upd_time < self.calculation_time:
+                break
+            new_latest_states.remove(_state)
+        self.latest_states = new_latest_states
+        self.latest_states.append(state)
+
+    def start(self):
+        self.start_time = time.time()
+        self.update = self._update
+        self.update()
 
     @staticmethod
     def _get_accelerometer(mb: KaspersMicrobit):
@@ -86,8 +108,8 @@ class JointTracker:
         return np.array([data.x, data.y, data.z])
 
     @staticmethod
-    def get_connection(microbits: List[KaspersMicrobit | str]):
-        connected_kms: List[KaspersMicrobit] = []
+    def get_connection(microbits):
+        connected_kms = []
         for microbit in microbits:
             match microbit:
                 case KaspersMicrobit():
@@ -104,7 +126,7 @@ class JointTracker:
         return connected_kms
 
     @staticmethod
-    def get_vector(acc, fixed_gravity):
+    def get_positions(acc, fixed_gravity):
         acc_yz = np.array([acc[1], acc[2]])
         theta = get_angle(acc_yz, np.array([1, 0]))
         rtheta = np.array(
@@ -114,13 +136,31 @@ class JointTracker:
                 [0, np.sin(theta), np.cos(theta)],
             ]
         )
-        return np.dot(rtheta, fixed_gravity)
+        return np.dot(rtheta, fixed_gravity), theta
 
-    def update(self):
+    def get_first_state(self, vectors, angles):
+        self.update_states(self.ArticulationState(vectors, angles, time.time(), None))
+        self.ArticulationState.get_speeds = self.ArticulationState._get_speeds
+        self.ArticulationState.get_accs = self.ArticulationState._get_accs
+        self.get_state = self._get_state
+
+    def _get_state(self, vectors, angles):
+        self.update_states(
+            self.ArticulationState(vectors, angles, time.time(), self.latest_states[0])
+        )
+        self.ArticulationState.get_speeds = self.ArticulationState._get_speeds
+        self.ArticulationState.get_accs = self.ArticulationState._get_accs
+
+    def _update(self):
         vectors = []
+        angles = []
         # Executa para cada segmento do braço após o primeiro
         for microbit in self.microbits:
             acc = self._get_accelerometer(microbit)
-            vectors.append(self.get_vector(acc, self.fixed_gravity))
+            vector, angle = self.get_positions(acc, self.fixed_gravity)
+            vectors.append(vector)
+            angles.append(angle)
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
+        angles = [angles[0]] + [angle - angles[n] for n, angle in enumerate(angles[1:])]
+        self.get_state(vector, angles)

@@ -13,6 +13,14 @@ class JointAnimation:
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, projection="3d")
         self.xyz_lim = xyz_lim
+        self.text = self.ax.text2D(
+            0.85,
+            0,
+            "",
+            transform=self.ax.transAxes,
+            fontsize=14,
+            verticalalignment="top",
+        )
 
     def update(self, frame):
         self.frame = frame
@@ -22,10 +30,14 @@ class JointAnimation:
         self.ax.set_ylim(self.xyz_lim[1])
         self.ax.set_zlim(self.xyz_lim[2])
         last_point = np.array([0, 0, 0])
-        for vector, length in zip(self.joint_tracker.vectors, self.lengths):
+        for vector, length in zip(self.joint_tracker.state.vectors, self.lengths):
             self.ax.quiver(*last_point, *vector * length)
             last_point = last_point + vector * length
         self.ax.quiver(*[0, 0, 0], *self.joint_tracker.fixed_gravity, color="red")
+        text = ""
+        for n, angle in enumerate(self.joint_tracker.state.angles):
+            text += f"angle_{n} = {angle}\n"
+        self.text.set_text("")
         return
 
     def animate(self):
