@@ -51,14 +51,14 @@ class JointTracker:
         def _get_speeds(state0, state1):
             speeds = []
             for a0, a1 in zip(state0.angles, state1.angles):
-                speeds.append((a0 - a1) / (state0.upd_time) - (state1.upd_time))
+                speeds.append((a0 - a1) / (state0.upd_time - state1.upd_time))
             return speeds
 
         @staticmethod
         def _get_accs(state0, state1):
             accs = []
             for a0, a1 in zip(state0.speeds, state1.speeds):
-                accs.append((a0 - a1) / (state0.upd_time) - (state1.upd_time))
+                accs.append((a0 - a1) / (state0.upd_time - state1.upd_time))
             return accs
 
     def __init__(self, *microbits: str | KaspersMicrobit, calculation_time, record):
@@ -97,7 +97,7 @@ class JointTracker:
         print("angles (degrees):", [np.degrees(x) for x in state.angles])
         print("angular speeds (rad/s):", state.speeds)
         print("angular accelerations (rad/s²):", state.accs)
-        print("elapsed time:", state.upd_time)
+        print("elapsed time:", state.upd_time - self.start_time)
 
     def start(self):
         self.start_time = time.time()
