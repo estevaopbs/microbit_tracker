@@ -56,7 +56,7 @@ class JointTracker:
         @staticmethod
         def _get_accs(state0, state1):
             accs = []
-            for a0, a1 in zip(state0.accs, state1.accs):
+            for a0, a1 in zip(state0.speeds, state1.speeds):
                 accs.append((a0 - a1) / (state0.upd_time) - (state1.upd_time))
             return accs
 
