@@ -132,7 +132,7 @@ class JointTracker:
                 [0, np.sin(phi), np.cos(phi)],
             ]
         )
-        return np.dot(rphi, np.dot(rtheta, fixed_gravity))
+        return np.dot(rtheta, np.dot(rphi, fixed_gravity))
 
     def update(self):
         # Define o vetor no sistema de coordenadas do primeiro segmento da
