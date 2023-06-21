@@ -116,8 +116,8 @@ class JointTracker:
         )
         rzrotang = np.array(
             [
-                [np.cos(theta), -np.sin(theta), 0],
-                [np.sin(theta), np.cos(theta), 0],
+                [np.cos(zrotang), -np.sin(zrotang), 0],
+                [np.sin(zrotang), np.cos(zrotang), 0],
                 [0, 0, 1],
             ]
         )
