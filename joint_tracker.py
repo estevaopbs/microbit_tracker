@@ -144,7 +144,7 @@ class JointTracker:
             # Define o vetor norte no sistema de coordenadas do microbit deste
             # segmento
             north = self._get_magnetometer(microbit)
-            acc = self._get_magnetometer(microbit)
+            acc = self._get_accelerometer(microbit)
             vectors.append(
                 self.get_vector(north, acc, self.fixed_north, self.fixed_gravity)
             )
