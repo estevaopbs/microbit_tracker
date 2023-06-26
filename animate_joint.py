@@ -15,14 +15,14 @@ class JointAnimation:
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
         self.xyz_lim = xyz_lim
-        self.text = self.ax.text2D(
-            0.85,
-            0,
-            "",
-            transform=self.ax.transAxes,
-            fontsize=14,
-            verticalalignment="top",
-        )
+        # self.text = self.ax.text2D(
+        #    0.85,
+        #    0,
+        #    "",
+        #    transform=self.ax.transAxes,
+        #    fontsize=14,
+        #    verticalalignment="top",
+        # )
 
     def update(self, frame):
         self.frame = frame
@@ -80,7 +80,7 @@ class JointAnimation:
                 )
             )
             articulation_origin += norm_vec * length
-        self.ax.quiver(*[0, 0, 0], *self.joint_tracker.fixed_gravity, color="red")
+        # self.ax.quiver(*[0, 0], *self.joint_tracker.fixed_gravity, color="red")
         return
 
     def animate(self):
