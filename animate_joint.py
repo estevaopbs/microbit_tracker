@@ -82,7 +82,7 @@ class JointAnimation:
                     rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
-            articulation_origin += np.array([norm_vec[1] + norm_vec[2]]) * length
+            articulation_origin += np.array([norm_vec[1], norm_vec[2]]) * length
         # self.ax.quiver(*[0, 0], *self.joint_tracker.fixed_gravity, color="red")
         return
 
