@@ -77,7 +77,7 @@ class JointAnimation:
                     length - self.articulation_diameter,
                     self.articulation_diameter,
                     angle=angle + 270 if n == 0 else angle,
-                    rotation_point=(articulation_origin[1], articulation_origin[2]),
+                    rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
             articulation_origin += np.array([norm_vec[1] + norm_vec[2]]) * length
