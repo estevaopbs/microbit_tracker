@@ -78,7 +78,7 @@ class JointAnimation:
                     rectangle_origin,
                     length - self.articulation_diameter,
                     self.articulation_diameter,
-                    angle=np.degrees(angle) + 270 / 2 if n == 0 else np.degrees(angle),
+                    angle=np.degrees(angle),
                     rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
