@@ -70,9 +70,10 @@ class JointAnimation:
             rectangle_origin = (
                 (norm_rot_vec + norm_vec) * self.articulation_diameter / 2
             )
+            print(rectangle_origin)
             self.ax.add_patch(
                 patches.Rectangle(
-                    rectangle_origin,
+                    (rectangle_origin[0], rectangle_origin[1]),
                     length - self.articulation_diameter,
                     self.articulation_diameter,
                     angle=angle + 270 if n == 0 else angle,
