@@ -67,7 +67,7 @@ class JointAnimation:
             )
             norm_vec = vector / np.linalg.norm(vector)
             norm_rot_vec = np.dot(rtheta, norm_vec)
-            rectangle_origin = (
+            rectangle_origin = articulation_origin + (
                 (norm_rot_vec + norm_vec) * self.articulation_diameter / 2
             )
             rectangle_origin = np.array([rectangle_origin[1], rectangle_origin[2]])
@@ -76,7 +76,7 @@ class JointAnimation:
                     rectangle_origin,
                     length - self.articulation_diameter,
                     self.articulation_diameter,
-                    angle=angle + 270 if n == 0 else angle,
+                    angle=angle + 3 * np.pi / 2 if n == 0 else angle,
                     rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
