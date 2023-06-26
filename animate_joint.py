@@ -67,10 +67,12 @@ class JointAnimation:
             )
             norm_vec = vector / np.linalg.norm(vector)
             norm_rot_vec = np.dot(rtheta, norm_vec)
-            rectangle_origin = articulation_origin + (
+            rectangle_origin = (
                 (norm_rot_vec + norm_vec) * self.articulation_diameter / 2
             )
-            rectangle_origin = np.array([rectangle_origin[1], rectangle_origin[2]])
+            rectangle_origin = articulation_origin + np.array(
+                [rectangle_origin[1], rectangle_origin[2]]
+            )
             self.ax.add_patch(
                 patches.Rectangle(
                     rectangle_origin,
