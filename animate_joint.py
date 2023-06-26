@@ -70,17 +70,17 @@ class JointAnimation:
             rectangle_origin = (
                 (norm_rot_vec + norm_vec) * self.articulation_diameter / 2
             )
-            print(rectangle_origin)
+            rectangle_origin = np.array([rectangle_origin[1], rectangle_origin[2]])
             self.ax.add_patch(
                 patches.Rectangle(
-                    (rectangle_origin[0], rectangle_origin[1]),
+                    rectangle_origin,
                     length - self.articulation_diameter,
                     self.articulation_diameter,
                     angle=angle + 270 if n == 0 else angle,
                     rotation_point=articulation_origin,
                 )
             )
-            articulation_origin += norm_vec * length
+            articulation_origin += np.array([norm_vec[1] + norm_vec[2]]) * length
         # self.ax.quiver(*[0, 0], *self.joint_tracker.fixed_gravity, color="red")
         return
 
