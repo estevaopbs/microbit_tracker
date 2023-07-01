@@ -93,12 +93,7 @@ class JointAnimation:
                     )
                     + np.degrees(angle)
                     - 90,
-                    rotation_point=(
-                        articulation_origin[0]
-                        + norm_vec[0] * self.articulation_diameter / 2,
-                        articulation_origin[1]
-                        + norm_vec[1] * self.articulation_diameter / 2,
-                    ),
+                    rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
             self.ax.add_patch(
@@ -114,15 +109,13 @@ class JointAnimation:
                     )
                     + np.degrees(angle)
                     - 90,
-                    rotation_point=(
-                        articulation_origin[0]
-                        + norm_vec[0] * self.articulation_diameter / 2,
-                        articulation_origin[1]
-                        + norm_vec[1] * self.articulation_diameter / 2,
-                    ),
+                    rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
-            articulation_origin += np.array([norm_vec[1], norm_vec[2]]) * length
+            articulation_origin += (
+                np.array([norm_vec[1], norm_vec[2]]) * length
+                + norm_vec * self.articulation_diameter / 2
+            )
         # self.ax.quiver(*[0, 0], *self.joint_tracker.fixed_gravity, color="red")
         return
 
