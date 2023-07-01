@@ -35,8 +35,8 @@ class JointAnimation:
         rtheta = np.array(
             [
                 [1, 0, 0],
-                [0, np.cos(np.pi), np.sin(np.pi)],
-                [0, -np.sin(np.pi), np.cos(np.pi)],
+                [0, np.cos(np.pi / 2), np.sin(np.pi / 2)],
+                [0, -np.sin(np.pi / 2), np.cos(np.pi / 2)],
             ]
         )
         # norm_vec = self.joint_tracker.state.vectors[0] / np.linalg.norm(
@@ -85,7 +85,8 @@ class JointAnimation:
                             for angle_ in self.joint_tracker.state.angles[:n]
                         ]
                     )
-                    + np.degrees(angle),
+                    + np.degrees(angle)
+                    - 90,
                     rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
