@@ -170,4 +170,6 @@ class JointTracker:
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
         angles = [angles[0]] + [angle - angles[n] for n, angle in enumerate(angles[1:])]
+        for angle in angles:
+            print(np.degrees(angle))
         self.get_state(vectors, angles)

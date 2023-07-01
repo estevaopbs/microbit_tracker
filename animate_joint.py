@@ -85,7 +85,7 @@ class JointAnimation:
                             for angle_ in self.joint_tracker.state.angles[:n]
                         ]
                     )
-                    + angle,
+                    + np.degrees(angle),
                     rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
