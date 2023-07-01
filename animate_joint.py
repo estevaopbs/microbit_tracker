@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from joint_tracker import JointTracker
 import matplotlib.patches as patches
+from copy import deepcopy
 
 
 class JointAnimation:
@@ -62,7 +63,7 @@ class JointAnimation:
         ):
             self.ax.add_patch(
                 patches.Circle(
-                    articulation_origin, radius=self.articulation_diameter / 2
+                    deepcopy(articulation_origin), radius=self.articulation_diameter / 2
                 )
             )
             norm_vec = vector / np.linalg.norm(vector)
