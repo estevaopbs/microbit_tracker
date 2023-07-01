@@ -73,12 +73,18 @@ class JointAnimation:
             rectangle_origin = articulation_origin + np.array(
                 [rectangle_origin[1], rectangle_origin[2]]
             )
+
             self.ax.add_patch(
                 patches.Rectangle(
                     rectangle_origin,
                     length - self.articulation_diameter,
                     self.articulation_diameter,
-                    angle=270 + np.degrees(angle) if n == 0 else np.degrees(angle),
+                    angle=sum(
+                        [
+                            np.degrees(angle_)
+                            for angle_ in self.joint_tracker.state.angles[:n]
+                        ]
+                    ),
                     rotation_point=(articulation_origin[0], articulation_origin[1]),
                 )
             )
