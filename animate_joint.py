@@ -114,7 +114,7 @@ class JointAnimation:
             )
             articulation_origin += (
                 np.array([norm_vec[1], norm_vec[2]]) * length
-                + norm_vec * self.articulation_diameter / 2
+                + np.array([norm_vec[1], norm_vec[2]]) * self.articulation_diameter / 2
             )
         # self.ax.quiver(*[0, 0], *self.joint_tracker.fixed_gravity, color="red")
         return
