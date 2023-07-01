@@ -33,11 +33,18 @@ class JointAnimation:
         self.ax.set_ylim(self.xyz_lim[1])
         # self.ax.set_zlim(self.xyz_lim[2])
         # last_point = np.array([0, 0, 0])
-        rtheta = np.array(
+        rot_90 = np.array(
             [
                 [1, 0, 0],
                 [0, np.cos(np.pi / 2), np.sin(np.pi / 2)],
                 [0, -np.sin(np.pi / 2), np.cos(np.pi / 2)],
+            ]
+        )
+        rot_90_neg = np.array(
+            [
+                [1, 0, 0],
+                [0, np.cos(np.pi / 2), -np.sin(np.pi / 2)],
+                [0, np.sin(np.pi / 2), np.cos(np.pi / 2)],
             ]
         )
         # norm_vec = self.joint_tracker.state.vectors[0] / np.linalg.norm(
@@ -67,10 +74,8 @@ class JointAnimation:
                 )
             )
             norm_vec = vector / np.linalg.norm(vector)
-            norm_rot_vec = np.dot(rtheta, norm_vec)
-            rectangle_origin = (
-                (norm_rot_vec + norm_vec) * self.articulation_diameter / 2
-            )
+            norm_rot_vec_1 = np.dot(rot_90, norm_vec)
+            rectangle_origin = norm_vec * self.articulation_diameter / 2
             rectangle_origin = articulation_origin + np.array(
                 [rectangle_origin[1], rectangle_origin[2]]
             )
@@ -79,7 +84,23 @@ class JointAnimation:
                 patches.Rectangle(
                     rectangle_origin,
                     length - self.articulation_diameter,
-                    self.articulation_diameter,
+                    self.articulation_diameter / 2,
+                    angle=sum(
+                        [
+                            np.degrees(angle_)
+                            for angle_ in self.joint_tracker.state.angles[:n]
+                        ]
+                    )
+                    + np.degrees(angle)
+                    - 90,
+                    rotation_point=(articulation_origin[0], articulation_origin[1]),
+                )
+            )
+            self.ax.add_patch(
+                patches.Rectangle(
+                    rectangle_origin,
+                    length - self.articulation_diameter,
+                    -self.articulation_diameter / 2,
                     angle=sum(
                         [
                             np.degrees(angle_)
