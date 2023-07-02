@@ -51,7 +51,7 @@ class JointAnimation:
         manager = plt.get_current_fig_manager()
         manager.full_screen_toggle()
         self.ax.set_aspect("equal")
-        plt.subplots_adjust(hspace=0.3)
+        plt.subplots_adjust(hspace=0.5)
 
         # self.text = self.ax.text2D(
         #    0.85,
