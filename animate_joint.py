@@ -87,7 +87,7 @@ class JointAnimation:
                     deepcopy(articulation_origin),
                     radius=self.articulation_diameter / 2,
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
-                    color="#FFFFFF",
+                    facecolor="#FFFFFF",
                     edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
                     fill=True,
                     zorder=1000,
