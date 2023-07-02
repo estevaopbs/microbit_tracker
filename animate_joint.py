@@ -10,7 +10,7 @@ SEGMENTS_COLOR = "#1F77B4"
 SEGMENTS_LINEWIDTH = 2
 
 ARTICULATION_EXTERNAL_C0LOR = "#FF7F0E"
-ARTICULATION_EXTERNAL_LINEWIDTH = 0.2
+ARTICULATION_EXTERNAL_LINEWIDTH = 2
 
 ARTICULATION_INTERNAL_SOLID_COLOR = "#FF7F0E"
 ARTICULATION_INTERNAL_SOLID_RADIUS = 0.4
@@ -74,30 +74,31 @@ class JointAnimation:
                     animated=True,
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
                     color=ARTICULATION_EXTERNAL_C0LOR,
+                    edgecolor=ARTICULATION_EXTERNAL_C0LOR,
                     fill=False,
                 )
             )
-            self.ax.add_patch(
-                patches.Circle(
-                    deepcopy(articulation_origin),
-                    radius=(self.articulation_diameter / 2)
-                    * ARTICULATION_INTERNAL_SOLID_RADIUS,
-                    animated=True,
-                    color=ARTICULATION_INTERNAL_SOLID_COLOR,
-                )
-            )
-            self.ax.add_patch(
-                patches.Circle(
-                    deepcopy(articulation_origin),
-                    radius=self.articulation_diameter
-                    / 2
-                    * ARTICULATION_INTERNAL_SHAPE_RADIUS,
-                    animated=True,
-                    linewidth=ARTICULATION_INTERNAL_SHAPE_LINEWIDTH,
-                    color=ARTICULATION_INTERNAL_SHAPE_COLOR,
-                    fill=False,
-                )
-            )
+            # self.ax.add_patch(
+            #    patches.Circle(
+            #        deepcopy(articulation_origin),
+            #        radius=(self.articulation_diameter / 2)
+            #        * ARTICULATION_INTERNAL_SOLID_RADIUS,
+            #        animated=True,
+            #        color=ARTICULATION_INTERNAL_SOLID_COLOR,
+            #    )
+            # )
+            # self.ax.add_patch(
+            #    patches.Circle(
+            #        deepcopy(articulation_origin),
+            #        radius=self.articulation_diameter
+            #        / 2
+            #        * ARTICULATION_INTERNAL_SHAPE_RADIUS,
+            #        animated=True,
+            #        linewidth=ARTICULATION_INTERNAL_SHAPE_LINEWIDTH,
+            #        color=ARTICULATION_INTERNAL_SHAPE_COLOR,
+            #        fill=False,
+            #    )
+            # )
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
             vertices = [
