@@ -6,6 +6,20 @@ import matplotlib.patches as patches
 from copy import deepcopy
 
 
+SEGMENTS_COLOR = "blue"
+SEGMENTS_LINEWIDTH = 0.2
+
+ARTICULATION_EXTERNAL_C0LOR = "orange"
+ARTICULATION_EXTERNAL_LINEWIDTH = 0.2
+
+ARTICULATION_INTERNAL_SOLID_COLOR = "orange"
+ARTICULATION_INTERNAL_SOLID_RADIUS = 0.4
+
+ARTICULATION_INTERNAL_SHAPE_COLOR = "black"
+ARTICULATION_INTERNAL_SHAPE_RADIUS = 0.2
+ARTICULATION_INTERNAL_SHAPE_LINEWIDTH = 0.05
+
+
 def xyz_to_yz(vec):
     return np.array([vec[1], vec[2]])
 
@@ -55,7 +69,33 @@ class JointAnimation:
         ):
             self.ax.add_patch(
                 patches.Circle(
-                    deepcopy(articulation_origin), radius=self.articulation_diameter / 2
+                    deepcopy(articulation_origin),
+                    radius=self.articulation_diameter / 2,
+                    animated=True,
+                    linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
+                    color=ARTICULATION_EXTERNAL_C0LOR,
+                    fill=False,
+                )
+            )
+            self.ax.add_patch(
+                patches.Circle(
+                    deepcopy(articulation_origin),
+                    radius=(self.articulation_diameter / 2)
+                    * ARTICULATION_INTERNAL_SOLID_RADIUS,
+                    animated=True,
+                    color=ARTICULATION_INTERNAL_SOLID_COLOR,
+                )
+            )
+            self.ax.add_patch(
+                patches.Circle(
+                    deepcopy(articulation_origin),
+                    radius=self.articulation_diameter
+                    / 2
+                    * ARTICULATION_INTERNAL_SHAPE_RADIUS,
+                    animated=True,
+                    linewidth=ARTICULATION_INTERNAL_SHAPE_LINEWIDTH,
+                    color=ARTICULATION_INTERNAL_SHAPE_COLOR,
+                    fill=False,
                 )
             )
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
