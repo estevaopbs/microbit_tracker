@@ -64,7 +64,6 @@ class JointAnimation:
             self.lengths,
             range(len(self.lengths)),
         ):
-            self.ax.plot(*articulation_origin, markersize=2, color="black")
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
             vertices = [
@@ -72,7 +71,7 @@ class JointAnimation:
             ]
             line_dir = deepcopy(norm_vec)
             for i in range(3):
-                _length = length if i % 2 == 0 else self.articulation_diameter
+                _length = length if i % 2 == 0 else self.articulation_diameter * 0.8
                 vertices.append(vertices[-1] + line_dir * _length)
                 line_dir = rotate_vector(line_dir, np.pi / 2)
             for j in range(4):
