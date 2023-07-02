@@ -60,7 +60,10 @@ class JointAnimation:
             )
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
-            vertices = [(norm_rot_vec + norm_vec) * self.articulation_diameter / 2]
+            vertices = [
+                ((norm_rot_vec + norm_vec) * self.articulation_diameter / 2)
+                + articulation_origin
+            ]
             line_dir = deepcopy(norm_vec)
             for i in range(4):
                 _length = (
