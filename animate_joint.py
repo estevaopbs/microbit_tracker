@@ -85,17 +85,18 @@ class JointAnimation:
                     color=ARTICULATION_INTERNAL_SOLID_COLOR,
                 )
             )
-            self.ax.add_patch(
-                patches.Circle(
-                    deepcopy(articulation_origin),
-                    radius=self.articulation_diameter
-                    / 2
-                    * ARTICULATION_INTERNAL_SHAPE_RADIUS,
-                    linewidth=ARTICULATION_INTERNAL_SHAPE_LINEWIDTH,
-                    color=ARTICULATION_INTERNAL_SHAPE_COLOR,
-                    fill=False,
-                )
-            )
+            # self.ax.add_patch(
+            #    patches.Circle(
+            #        deepcopy(articulation_origin),
+            #        radius=self.articulation_diameter
+            #        / 2
+            #        * ARTICULATION_INTERNAL_SHAPE_RADIUS,
+            #        linewidth=ARTICULATION_INTERNAL_SHAPE_LINEWIDTH,
+            #        color=ARTICULATION_INTERNAL_SHAPE_COLOR,
+            #        fill=False,
+            #    )
+            # )
+            self.ax.plot(*articulation_origin, markersize=2, color="black")
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
             vertices = [
