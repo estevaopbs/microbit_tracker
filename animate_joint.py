@@ -68,11 +68,14 @@ class JointAnimation:
         self.ax.set_xlim(self.xyz_lim[0])
         self.ax.set_ylim(self.xyz_lim[1])
 
-        self.ax_angles.set_ylim([-6.5, 6.5])
+        self.ax_angles.set_ylim([np.degrees(-6.5), np.degrees(6.5)])
+        self.ax_angles.set_xlim([-TIMESPAN, 0])
 
         self.ax_speed.set_ylim([-7.5, 7.5])
+        self.ax_speed.set_xlim([-TIMESPAN, 0])
 
         self.ax_acc.set_ylim([-15, 15])
+        self.ax_acc.set_xlim([-TIMESPAN, 0])
 
         articulation_origin = np.zeros(2)
         for vector, angle, length, n in zip(
@@ -133,7 +136,7 @@ class JointAnimation:
         for state in self.states:
             x.append(state.upd_time - now)
             for n, articulation in enumerate(y_angles):
-                articulation.append(state.angles[n])
+                articulation.append(np.degrees(state.angles[n]))
             for n, articulation in enumerate(y_speed):
                 articulation.append(state.speeds[n])
             for n, articulation in enumerate(y_acc):
