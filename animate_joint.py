@@ -14,7 +14,7 @@ ARTICULATION_EXTERNAL_SHAPE_C0LOR = "#000000"
 ARTICULATION_EXTERNAL_LINEWIDTH = 0.5
 
 ARTICULATION_INTERNAL_SOLID_COLOR = "#000000"
-ARTICULATION_INTERNAL_SOLID_RADIUS = 0.6
+ARTICULATION_INTERNAL_SOLID_RADIUS = 0.5
 
 
 def xyz_to_yz(vec):
@@ -67,7 +67,8 @@ class JointAnimation:
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
             vertices = [
-                (norm_rot_vec * self.articulation_diameter / 2) + articulation_origin
+                (norm_rot_vec * self.articulation_diameter / 2 * 0.8)
+                + articulation_origin
             ]
             line_dir = deepcopy(norm_vec)
             for i in range(3):
