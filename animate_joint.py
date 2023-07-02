@@ -9,15 +9,12 @@ from copy import deepcopy
 SEGMENTS_COLOR = "#1F77B4"
 SEGMENTS_LINEWIDTH = 2
 
-ARTICULATION_EXTERNAL_C0LOR = "#FF7F0E"
+ARTICULATION_EXTERNAL_EDGE_C0LOR = "#FFFFFF"
+ARTICULATION_EXTERNAL_SHAPE_C0LOR = "#FFFFFF"
 ARTICULATION_EXTERNAL_LINEWIDTH = 2
 
-ARTICULATION_INTERNAL_SOLID_COLOR = "#FF7F0E"
-ARTICULATION_INTERNAL_SOLID_RADIUS = 0.4
-
-ARTICULATION_INTERNAL_SHAPE_COLOR = "#FFFFFF"
-ARTICULATION_INTERNAL_SHAPE_RADIUS = 0.2
-ARTICULATION_INTERNAL_SHAPE_LINEWIDTH = 0.05
+ARTICULATION_INTERNAL_SOLID_COLOR = "#FFFFFF"
+ARTICULATION_INTERNAL_SOLID_RADIUS = 0.6
 
 
 def xyz_to_yz(vec):
@@ -67,14 +64,32 @@ class JointAnimation:
             self.lengths,
             range(len(self.lengths)),
         ):
+            self.ax.plot(*articulation_origin, markersize=2, color="black")
+            norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
+            norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
+            vertices = [
+                (norm_rot_vec * self.articulation_diameter / 2) + articulation_origin
+            ]
+            line_dir = deepcopy(norm_vec)
+            for i in range(3):
+                _length = length if i % 2 == 0 else self.articulation_diameter
+                vertices.append(vertices[-1] + line_dir * _length)
+                line_dir = rotate_vector(line_dir, np.pi / 2)
+            for j in range(4):
+                self.ax.plot(
+                    [vertices[j][0], vertices[j - 1][0]],
+                    [vertices[j][1], vertices[j - 1][1]],
+                    linewidth=SEGMENTS_LINEWIDTH,
+                    color=SEGMENTS_COLOR,
+                )
             self.ax.add_patch(
                 patches.Circle(
                     deepcopy(articulation_origin),
                     radius=self.articulation_diameter / 2,
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
-                    color=ARTICULATION_EXTERNAL_C0LOR,
-                    edgecolor=ARTICULATION_EXTERNAL_C0LOR,
-                    fill=False,
+                    color=ARTICULATION_EXTERNAL_SHAPE_C0LOR,
+                    edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
+                    fill=True,
                 )
             )
             self.ax.add_patch(
@@ -85,40 +100,6 @@ class JointAnimation:
                     color=ARTICULATION_INTERNAL_SOLID_COLOR,
                 )
             )
-            # self.ax.add_patch(
-            #    patches.Circle(
-            #        deepcopy(articulation_origin),
-            #        radius=self.articulation_diameter
-            #        / 2
-            #        * ARTICULATION_INTERNAL_SHAPE_RADIUS,
-            #        linewidth=ARTICULATION_INTERNAL_SHAPE_LINEWIDTH,
-            #        color=ARTICULATION_INTERNAL_SHAPE_COLOR,
-            #        fill=False,
-            #    )
-            # )
-            self.ax.plot(*articulation_origin, markersize=2, color="black")
-            norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
-            norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
-            vertices = [
-                ((norm_rot_vec + norm_vec) * self.articulation_diameter / 2)
-                + articulation_origin
-            ]
-            line_dir = deepcopy(norm_vec)
-            for i in range(3):
-                _length = (
-                    length - self.articulation_diameter
-                    if i % 2 == 0
-                    else self.articulation_diameter
-                )
-                vertices.append(vertices[-1] + line_dir * _length)
-                line_dir = rotate_vector(line_dir, np.pi / 2)
-            for j in range(4):
-                self.ax.plot(
-                    [vertices[j][0], vertices[j - 1][0]],
-                    [vertices[j][1], vertices[j - 1][1]],
-                    linewidth=SEGMENTS_LINEWIDTH,
-                    color=SEGMENTS_COLOR,
-                )
             articulation_origin += norm_vec * length
         return
 
