@@ -40,9 +40,9 @@ class JointAnimation:
         self.frame = 0
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(121)
-        self.ax_angles = self.fig.add_subplot(232)
-        self.ax_speed = self.fig.add_subplot(234)
-        self.ax_acc = self.fig.add_subplot(236)
+        self.ax_angles = self.fig.add_subplot(322)
+        self.ax_speed = self.fig.add_subplot(324)
+        self.ax_acc = self.fig.add_subplot(326)
         self.xyz_lim = xyz_lim
 
         # self.text = self.ax.text2D(
