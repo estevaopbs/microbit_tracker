@@ -117,6 +117,8 @@ class JointAnimation:
                 self.ax.plot(
                     [vertices[j][0], vertices[j - 1][0]],
                     [vertices[j][1], vertices[j - 1][1]],
+                    linewidth=SEGMENTS_LINEWIDTH,
+                    color=SEGMENTS_COLOR,
                 )
             articulation_origin += norm_vec * length
         return
