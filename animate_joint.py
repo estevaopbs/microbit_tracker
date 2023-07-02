@@ -71,10 +71,10 @@ class JointAnimation:
         self.ax_angles.set_ylim([np.degrees(-6.5), np.degrees(6.5)])
         self.ax_angles.set_xlim([-TIMESPAN, 0])
 
-        self.ax_speed.set_ylim([-7.5, 7.5])
+        # self.ax_speed.set_ylim([-7.5, 7.5])
         self.ax_speed.set_xlim([-TIMESPAN, 0])
 
-        self.ax_acc.set_ylim([-15, 15])
+        # self.ax_acc.set_ylim([-15, 15])
         self.ax_acc.set_xlim([-TIMESPAN, 0])
 
         articulation_origin = np.zeros(2)
