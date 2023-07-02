@@ -71,7 +71,7 @@ class JointAnimation:
                 patches.Circle(
                     deepcopy(articulation_origin),
                     radius=self.articulation_diameter / 2,
-                    animated=True,
+                    # animated=True,
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
                     color=ARTICULATION_EXTERNAL_C0LOR,
                     edgecolor=ARTICULATION_EXTERNAL_C0LOR,
