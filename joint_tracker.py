@@ -85,12 +85,10 @@ class JointTracker:
     def update_states(self, state):
         self.vectors = state.vectors
         self.record_state(state)
-        new_latest_states = copy.copy(self.latest_states)
-        for _state in self.latest_states:
+        for n, _state in enumerate(self.latest_states):
             if state.upd_time - _state.upd_time < self.calculation_time:
+                self.latest_states = self.latest_states[n:]
                 break
-            new_latest_states.remove(_state)
-        self.latest_states = new_latest_states
         self.latest_states.append(state)
         system("cls")
         print("vectors: ", state.vectors)

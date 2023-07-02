@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from joint_tracker import JointTracker
 import matplotlib.patches as patches
-from copy import deepcopy
+from copy import deepcopy, copy
+import time
 
 
 SEGMENTS_COLOR = "#1F77B4"
@@ -15,6 +16,8 @@ ARTICULATION_EXTERNAL_LINEWIDTH = 0.5
 
 ARTICULATION_INTERNAL_SOLID_COLOR = "#000000"
 ARTICULATION_INTERNAL_SOLID_RADIUS = 0.5
+
+TIMESPAN = 10
 
 
 def xyz_to_yz(vec):
@@ -44,6 +47,7 @@ class JointAnimation:
         self.ax_speed = self.fig.add_subplot(324)
         self.ax_acc = self.fig.add_subplot(326)
         self.xyz_lim = xyz_lim
+        self.states = []
 
         # self.text = self.ax.text2D(
         #    0.85,
@@ -110,14 +114,30 @@ class JointAnimation:
                 )
             )
             articulation_origin += norm_vec * length
-
-        x = [1, 2, 3, 4, 5]
-        y1 = [1, 4, 9, 16, 25]
-        y2 = [1, 8, 27, 64, 125]
-        y3 = [1, 16, 81, 256, 625]
-        self.ax_angles.plot(x, y1)
-        self.ax_speed.plot(x, y2)
-        self.ax_acc.plot(x, y3)
+        now = self.joint_tracker.state.upt_time
+        for n, state in enumerate(self.states):
+            if now - state.upd_time < TIMESPAN:
+                self.states = self.states[n:]
+                break
+        self.states.append(self.joint_tracker.state)
+        x = []
+        y_angles = [[] for _ in self.lengths]
+        y_speed = [[] for _ in self.lengths]
+        y_acc = [[] for _ in self.lengths]
+        for state in self.states:
+            x.append(state.upd_time - now)
+            for n, articulation in enumerate(y_angles):
+                articulation.append(state.angles[n])
+            for n, articulation in enumerate(y_speed):
+                articulation.append(state.speeds[n])
+            for n, articulation in enumerate(y_acc):
+                articulation.append(state.accs[n])
+        for y in y_angles:
+            self.ax_angles.plot(x, y)
+        for y in y_speed:
+            self.ax_speed.plot(x, y)
+        for y in y_acc:
+            self.ax_acc.plot(x, y)
         return
 
     def animate(self):
