@@ -62,9 +62,13 @@ class JointAnimation:
         self.frame = frame
         self.joint_tracker.update()
         self.ax.clear()
+        self.ax.set_title("Manipulador Planar")
         self.ax_angles.clear()
+        self.ax_angles.set_title("Ângulos")
         self.ax_speed.clear()
+        self.ax_speed.set_title("Velocidades Angulares")
         self.ax_acc.clear()
+        self.ax_acc.set_title("Acelerações Angulares")
         self.ax.set_xlim(self.xyz_lim[0])
         self.ax.set_ylim(self.xyz_lim[1])
 
@@ -141,12 +145,21 @@ class JointAnimation:
                 articulation.append(state.speeds[n])
             for n, articulation in enumerate(y_acc):
                 articulation.append(state.accs[n])
-        for y in y_angles:
-            self.ax_angles.plot(x, y)
-        for y in y_speed:
-            self.ax_speed.plot(x, y)
-        for y in y_acc:
-            self.ax_acc.plot(x, y)
+        for n, y in enumerate(y_angles):
+            self.ax_angles.plot(x, y, label=f"Articulação {n}")
+        for n, y in enumerate(y_speed):
+            self.ax_speed.plot(x, y, label=f"Articulação {n}")
+        for n, y in enumerate(y_acc):
+            self.ax_acc.plot(x, y, label=f"Articulação {n}")
+        self.ax_angles.legend()
+        self.ax_angles.set_xlabel("Tempo (s)")
+        self.ax_angles.set_ylabel("Ângulo (Graus)")
+        self.ax_acc.legend()
+        self.ax_acc.set_xlabel("Tempo (s)")
+        self.ax_acc.set_ylabel("Aceleração Ângular (rad/s²)")
+        self.ax_speed.legend()
+        self.ax_speed.set_xlabel("Tempo (s)")
+        self.ax_speed.set_ylabel("Velocidade Ângular (rad/s)")
         return
 
     def animate(self):
