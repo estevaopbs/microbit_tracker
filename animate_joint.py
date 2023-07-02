@@ -74,7 +74,10 @@ class JointAnimation:
                 vertices.append(vertices[-1] + line_dir * _length)
                 line_dir = rotate_vector(line_dir, np.pi / 2)
             for j in range(4):
-                self.ax.plot(vertices[j], vertices[j - 1])
+                self.ax.plot(
+                    [vertices[j][0], vertices[j - 1][0]],
+                    [vertices[j][1], vertices[j - 1][1]],
+                )
             articulation_origin += norm_vec * length
         return
 
