@@ -71,8 +71,8 @@ class JointTracker:
         self.latest_states: List[self.ArticulationState] = []
         self.calculation_time = calculation_time
         self.get_state = self.get_first_state
-        self.ArticulationState.get_speeds = lambda x, y: [0, 0]
-        self.ArticulationState.get_accs = lambda x, y: [0, 0]
+        self.ArticulationState.get_speeds = lambda x, y: [0 for _ in self.microbits]
+        self.ArticulationState.get_accs = lambda x, y: [0 for _ in self.microbits]
 
     @property
     def state(self):
