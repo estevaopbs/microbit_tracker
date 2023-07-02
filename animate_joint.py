@@ -44,6 +44,7 @@ class JointAnimation:
         self.ax_speed = self.fig.add_subplot(122)
         self.ax_acc = self.fig.add_subplot(123)
         self.xyz_lim = xyz_lim
+
         # self.text = self.ax.text2D(
         #    0.85,
         #    0,
@@ -57,6 +58,9 @@ class JointAnimation:
         self.frame = frame
         self.joint_tracker.update()
         self.ax.clear()
+        self.ax_angles.clear()
+        self.ax_speed.clear()
+        self.ax_acc.clear()
         self.ax.set_xlim(self.xyz_lim[0])
         self.ax.set_ylim(self.xyz_lim[1])
 
@@ -106,6 +110,14 @@ class JointAnimation:
                 )
             )
             articulation_origin += norm_vec * length
+
+        x = [1, 2, 3, 4, 5]
+        y1 = [1, 4, 9, 16, 25]
+        y2 = [1, 8, 27, 64, 125]
+        y3 = [1, 16, 81, 256, 625]
+        self.ax_angles.plot(x, y1)
+        self.ax_speed.plot(x, y2)
+        self.ax_acc.plot(x, y3)
         return
 
     def animate(self):
