@@ -59,9 +59,9 @@ class JointAnimation:
                     deepcopy(articulation_origin), radius=self.articulation_diameter / 2
                 )
             )
-            norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
+            norm_vec = vector / np.linalg.norm(vector)
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
-
+            norm_vec = xyz_to_yz(norm_vec)
             vertices = [(norm_rot_vec + norm_vec) * self.articulation_diameter / 2]
             line_dir = deepcopy(norm_vec)
             for n in range(4):
