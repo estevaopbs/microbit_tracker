@@ -68,6 +68,12 @@ class JointAnimation:
         self.ax.set_xlim(self.xyz_lim[0])
         self.ax.set_ylim(self.xyz_lim[1])
 
+        self.ax_angles.set_ylim([-6.5, 6.5])
+
+        self.ax_speed.set_ylim([-7.5, 7.5])
+
+        self.ax_acc.set_ylim([-15, 15])
+
         articulation_origin = np.zeros(2)
         for vector, angle, length, n in zip(
             self.joint_tracker.state.vectors,
