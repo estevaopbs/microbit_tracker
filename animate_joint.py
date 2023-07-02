@@ -68,7 +68,7 @@ class JointAnimation:
                     if n % 2 == 0
                     else self.articulation_diameter
                 )
-                vertices += vertices[-1] + line_dir * _length
+                vertices.append(vertices[-1] + line_dir * _length)
                 line_dir = rotate_vector(line_dir, np.pi / 2)
             for n in range(4):
                 self.ax.plot(vertices[n], vertices[n - 1])
