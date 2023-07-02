@@ -9,11 +9,11 @@ from copy import deepcopy
 SEGMENTS_COLOR = "#1F77B4"
 SEGMENTS_LINEWIDTH = 2
 
-ARTICULATION_EXTERNAL_EDGE_C0LOR = "black"
-ARTICULATION_EXTERNAL_SHAPE_C0LOR = "black"
-ARTICULATION_EXTERNAL_LINEWIDTH = 2
+ARTICULATION_EXTERNAL_EDGE_C0LOR = "#000000"
+ARTICULATION_EXTERNAL_SHAPE_C0LOR = "#000000"
+ARTICULATION_EXTERNAL_LINEWIDTH = 0.5
 
-ARTICULATION_INTERNAL_SOLID_COLOR = "black"
+ARTICULATION_INTERNAL_SOLID_COLOR = "#000000"
 ARTICULATION_INTERNAL_SOLID_RADIUS = 0.6
 
 
@@ -64,24 +64,6 @@ class JointAnimation:
             self.lengths,
             range(len(self.lengths)),
         ):
-            self.ax.add_patch(
-                patches.Circle(
-                    deepcopy(articulation_origin),
-                    radius=self.articulation_diameter / 2,
-                    linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
-                    color=ARTICULATION_EXTERNAL_SHAPE_C0LOR,
-                    edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
-                    # fill=True,
-                )
-            )
-            self.ax.add_patch(
-                patches.Circle(
-                    deepcopy(articulation_origin),
-                    radius=(self.articulation_diameter / 2)
-                    * ARTICULATION_INTERNAL_SOLID_RADIUS,
-                    color=ARTICULATION_INTERNAL_SOLID_COLOR,
-                )
-            )
             norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
             vertices = [
@@ -99,7 +81,24 @@ class JointAnimation:
                     linewidth=SEGMENTS_LINEWIDTH,
                     color=SEGMENTS_COLOR,
                 )
-
+            self.ax.add_patch(
+                patches.Circle(
+                    deepcopy(articulation_origin),
+                    radius=self.articulation_diameter / 2,
+                    linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
+                    color=ARTICULATION_EXTERNAL_SHAPE_C0LOR,
+                    edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
+                    fill=False,
+                )
+            )
+            self.ax.add_patch(
+                patches.Circle(
+                    deepcopy(articulation_origin),
+                    radius=(self.articulation_diameter / 2)
+                    * ARTICULATION_INTERNAL_SOLID_RADIUS,
+                    color=ARTICULATION_INTERNAL_SOLID_COLOR,
+                )
+            )
             articulation_origin += norm_vec * length
         return
 
