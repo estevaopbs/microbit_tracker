@@ -50,6 +50,8 @@ class JointAnimation:
         self.states = []
         manager = plt.get_current_fig_manager()
         manager.full_screen_toggle()
+        self.ax.set_aspect("equal")
+        plt.subplots_adjust(hspace=0.3)
 
         # self.text = self.ax.text2D(
         #    0.85,
@@ -162,7 +164,7 @@ class JointAnimation:
         self.ax_speed.legend(loc="upper right")
         self.ax_speed.set_xlabel("Tempo (s)")
         self.ax_speed.set_ylabel("Velocidade Ângular (rad/s)")
-        self.ax.set_aspect("equal")
+
         return
 
     def animate(self):
