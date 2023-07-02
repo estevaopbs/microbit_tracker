@@ -71,7 +71,7 @@ class JointAnimation:
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
                     color=ARTICULATION_EXTERNAL_SHAPE_C0LOR,
                     edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
-                    fill=True,
+                    # fill=True,
                 )
             )
             self.ax.add_patch(
