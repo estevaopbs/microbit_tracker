@@ -151,13 +151,13 @@ class JointAnimation:
             self.ax_speed.plot(x, y, label=f"Articulação {n}")
         for n, y in enumerate(y_acc):
             self.ax_acc.plot(x, y, label=f"Articulação {n}")
-        self.ax_angles.legend()
+        self.ax_angles.legend(loc="upper right")
         self.ax_angles.set_xlabel("Tempo (s)")
         self.ax_angles.set_ylabel("Ângulo (Graus)")
-        self.ax_acc.legend()
+        self.ax_acc.legend(loc="upper right")
         self.ax_acc.set_xlabel("Tempo (s)")
         self.ax_acc.set_ylabel("Aceleração Ângular (rad/s²)")
-        self.ax_speed.legend()
+        self.ax_speed.legend(loc="upper right")
         self.ax_speed.set_xlabel("Tempo (s)")
         self.ax_speed.set_ylabel("Velocidade Ângular (rad/s)")
         return
