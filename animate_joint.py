@@ -42,7 +42,7 @@ class JointAnimation:
         self.ax = self.fig.add_subplot(111)
         self.ax_angles = self.fig.add_subplot(121)
         self.ax_speed = self.fig.add_subplot(122)
-        self.ax_acc = self.fig.add_subplot(123)
+        # self.ax_acc = self.fig.add_subplot(123)
         self.xyz_lim = xyz_lim
 
         # self.text = self.ax.text2D(
@@ -60,7 +60,7 @@ class JointAnimation:
         self.ax.clear()
         self.ax_angles.clear()
         self.ax_speed.clear()
-        self.ax_acc.clear()
+        # self.ax_acc.clear()
         self.ax.set_xlim(self.xyz_lim[0])
         self.ax.set_ylim(self.xyz_lim[1])
 
@@ -117,7 +117,7 @@ class JointAnimation:
         y3 = [1, 16, 81, 256, 625]
         self.ax_angles.plot(x, y1)
         self.ax_speed.plot(x, y2)
-        self.ax_acc.plot(x, y3)
+        # self.ax_acc.plot(x, y3)
         return
 
     def animate(self):
