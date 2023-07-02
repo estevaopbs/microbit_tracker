@@ -65,7 +65,7 @@ class JointAnimation:
                 + articulation_origin
             ]
             line_dir = deepcopy(norm_vec)
-            for i in range(4):
+            for i in range(3):
                 _length = (
                     length - self.articulation_diameter
                     if i % 2 == 0
@@ -78,10 +78,6 @@ class JointAnimation:
                     [vertices[j][0], vertices[j - 1][0]],
                     [vertices[j][1], vertices[j - 1][1]],
                 )
-            self.ax.plot(
-                [vertices[-1][0], vertices[0][0]],
-                [vertices[-1][1], vertices[0][1]],
-            )
             articulation_origin += norm_vec * length
         return
 
