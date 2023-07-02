@@ -48,6 +48,8 @@ class JointAnimation:
         self.ax_acc = self.fig.add_subplot(326)
         self.xyz_lim = xyz_lim
         self.states = []
+        manager = plt.get_current_fig_manager()
+        manager.full_screen_toggle()
 
         # self.text = self.ax.text2D(
         #    0.85,
