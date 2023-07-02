@@ -89,7 +89,7 @@ class JointAnimation:
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
                     color="#FFFFFF",
                     edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
-                    fill=False,
+                    fill=True,
                     zorder=1000,
                 )
             )
