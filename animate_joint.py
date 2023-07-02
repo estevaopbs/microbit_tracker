@@ -87,10 +87,10 @@ class JointAnimation:
                     deepcopy(articulation_origin),
                     radius=self.articulation_diameter / 2,
                     linewidth=ARTICULATION_EXTERNAL_LINEWIDTH,
-                    color=ARTICULATION_EXTERNAL_SHAPE_C0LOR,
+                    color="#FFFFFF",
                     edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
                     fill=False,
-                    alpha=0.5,
+                    zorder=1000,
                 )
             )
             self.ax.add_patch(
@@ -99,7 +99,7 @@ class JointAnimation:
                     radius=(self.articulation_diameter / 2)
                     * ARTICULATION_INTERNAL_SOLID_RADIUS,
                     color=ARTICULATION_INTERNAL_SOLID_COLOR,
-                    alpha=0.5,
+                    zorder=1000,
                 )
             )
             articulation_origin += norm_vec * length
