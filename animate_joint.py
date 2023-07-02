@@ -6,6 +6,21 @@ import matplotlib.patches as patches
 from copy import deepcopy
 
 
+def xyz_to_yz(vec):
+    return np.array([vec[1], vec[2]])
+
+
+def rotate_vector(vec, angle):
+    rot = np.array(
+        [
+            [1, 0, 0],
+            [0, np.cos(angle), np.sin(angle)],
+            [0, -np.sin(angle), np.cos(angle)],
+        ]
+    )
+    return np.dot(rot, vec)
+
+
 class JointAnimation:
     def __init__(self, joint_tracker: JointTracker, lenghts, frames, xyz_lim):
         self.joint_tracker = joint_tracker
@@ -31,36 +46,7 @@ class JointAnimation:
         self.ax.clear()
         self.ax.set_xlim(self.xyz_lim[0])
         self.ax.set_ylim(self.xyz_lim[1])
-        # self.ax.set_zlim(self.xyz_lim[2])
-        # last_point = np.array([0, 0, 0])
-        rot_90 = np.array(
-            [
-                [1, 0, 0],
-                [0, np.cos(np.pi / 2), np.sin(np.pi / 2)],
-                [0, -np.sin(np.pi / 2), np.cos(np.pi / 2)],
-            ]
-        )
-        rot_90_neg = np.array(
-            [
-                [1, 0, 0],
-                [0, np.cos(np.pi / 2), -np.sin(np.pi / 2)],
-                [0, np.sin(np.pi / 2), np.cos(np.pi / 2)],
-            ]
-        )
-        # norm_vec = self.joint_tracker.state.vectors[0] / np.linalg.norm(
-        #    self.joint_tracker.state.vectors[0]
-        # )
-        # norm_rot_vec = np.dot(rtheta, norm_vec)
-        # rectangle_origin = norm_rot_vec * self.articulation_diameter / 2
-        # self.ax.add_patch(
-        #    patches.Rectangle(
-        #        rectangle_origin,
-        #        self.lengths[0] - self.articulation_diameter,
-        #        self.articulation_diameter,
-        #        angle=self.joint_tracker.state.angles[0] + ((3 * np.pi) / 2),
-        #        rotation_point=(0, 0),
-        #    )
-        # )
+
         articulation_origin = np.zeros(2)
         for vector, angle, length, n in zip(
             self.joint_tracker.state.vectors,
@@ -73,50 +59,22 @@ class JointAnimation:
                     deepcopy(articulation_origin), radius=self.articulation_diameter / 2
                 )
             )
-            norm_vec = vector / np.linalg.norm(vector)
-            norm_rot_vec_1 = np.dot(rot_90, norm_vec)
-            rectangle_origin = norm_vec * self.articulation_diameter / 2
-            rectangle_origin = articulation_origin + np.array(
-                [rectangle_origin[1], rectangle_origin[2]]
-            )
+            norm_vec = xyz_to_yz(vector / np.linalg.norm(vector))
+            norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
 
-            self.ax.add_patch(
-                patches.Rectangle(
-                    rectangle_origin,
-                    length - self.articulation_diameter,
-                    self.articulation_diameter / 2,
-                    angle=sum(
-                        [
-                            np.degrees(angle_)
-                            for angle_ in self.joint_tracker.state.angles[:n]
-                        ]
-                    )
-                    + np.degrees(angle)
-                    - 90,
-                    rotation_point=(articulation_origin[0], articulation_origin[1]),
+            vertices = [(norm_rot_vec + norm_vec) * self.articulation_diameter / 2]
+            line_dir = deepcopy(norm_vec)
+            for n in range(4):
+                _length = (
+                    length - self.articulation_diameter
+                    if n % 2 == 0
+                    else self.articulation_diameter
                 )
-            )
-            self.ax.add_patch(
-                patches.Rectangle(
-                    rectangle_origin,
-                    length - self.articulation_diameter,
-                    -self.articulation_diameter / 2,
-                    angle=sum(
-                        [
-                            np.degrees(angle_)
-                            for angle_ in self.joint_tracker.state.angles[:n]
-                        ]
-                    )
-                    + np.degrees(angle)
-                    - 90,
-                    rotation_point=(articulation_origin[0], articulation_origin[1]),
-                )
-            )
-            articulation_origin += (
-                np.array([norm_vec[1], norm_vec[2]]) * length
-                + np.array([norm_vec[1], norm_vec[2]]) * self.articulation_diameter / 2
-            )
-        # self.ax.quiver(*[0, 0], *self.joint_tracker.fixed_gravity, color="red")
+                vertices += vertices[-1] + line_dir * _length
+                line_dir = rotate_vector(line_dir, np.pi / 2)
+            for n in range(4):
+                self.ax.plot(vertices[n], vertices[n - 1])
+            articulation_origin += norm_vec * length
         return
 
     def animate(self):
