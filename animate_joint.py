@@ -90,6 +90,7 @@ class JointAnimation:
                     color=ARTICULATION_EXTERNAL_SHAPE_C0LOR,
                     edgecolor=ARTICULATION_EXTERNAL_EDGE_C0LOR,
                     fill=False,
+                    alpha=0.5,
                 )
             )
             self.ax.add_patch(
@@ -98,6 +99,7 @@ class JointAnimation:
                     radius=(self.articulation_diameter / 2)
                     * ARTICULATION_INTERNAL_SOLID_RADIUS,
                     color=ARTICULATION_INTERNAL_SOLID_COLOR,
+                    alpha=0.5,
                 )
             )
             articulation_origin += norm_vec * length
