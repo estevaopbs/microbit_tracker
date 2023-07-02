@@ -162,6 +162,7 @@ class JointAnimation:
         self.ax_speed.legend(loc="upper right")
         self.ax_speed.set_xlabel("Tempo (s)")
         self.ax_speed.set_ylabel("Velocidade Ângular (rad/s)")
+        self.ax.set_aspect("equal")
         return
 
     def animate(self):
