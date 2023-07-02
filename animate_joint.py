@@ -62,16 +62,16 @@ class JointAnimation:
             norm_rot_vec = rotate_vector(norm_vec, -np.pi / 2)
             vertices = [(norm_rot_vec + norm_vec) * self.articulation_diameter / 2]
             line_dir = deepcopy(norm_vec)
-            for n in range(4):
+            for i in range(4):
                 _length = (
                     length - self.articulation_diameter
-                    if n % 2 == 0
+                    if i % 2 == 0
                     else self.articulation_diameter
                 )
                 vertices.append(vertices[-1] + line_dir * _length)
                 line_dir = rotate_vector(line_dir, np.pi / 2)
-            for n in range(4):
-                self.ax.plot(vertices[n], vertices[n - 1])
+            for j in range(4):
+                self.ax.plot(vertices[j], vertices[j - 1])
             articulation_origin += norm_vec * length
         return
 
