@@ -114,7 +114,7 @@ class JointAnimation:
                 )
             )
             articulation_origin += norm_vec * length
-        now = self.joint_tracker.state.upt_time
+        now = self.joint_tracker.state.upd_time
         for n, state in enumerate(self.states):
             if now - state.upd_time < TIMESPAN:
                 self.states = self.states[n:]
