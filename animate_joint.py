@@ -157,7 +157,7 @@ class JointAnimation:
             self.ax_acc.plot(x, y, label=f"Articulação {n}")
         self.ax_angles.legend(loc="upper right")
         self.ax_angles.set_xlabel("Tempo (s)")
-        self.ax_angles.set_ylabel("Ângulo (Graus)")
+        self.ax_angles.set_ylabel("Ângulo (graus)")
         self.ax_acc.legend(loc="upper right")
         self.ax_acc.set_xlabel("Tempo (s)")
         self.ax_acc.set_ylabel("Aceleração Ângular (rad/s²)")

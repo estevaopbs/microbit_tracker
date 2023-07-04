@@ -119,8 +119,14 @@ def get_state_fullgravity2d(*microbit_rows, last_states):
     return get_state_fn(vectors, angles, upd_time, last_states)
 
 
-microbit_data_0 = pd.read_excel("./graphics_video/microbit_acc_0.xlsx")
-microbit_data_1 = pd.read_excel("./graphics_video/microbit_acc_1.xlsx")
+# Acelerômetro
+# microbit_data_0 = pd.read_excel("./graphics_video/microbit_acc_0.xlsx")
+# microbit_data_1 = pd.read_excel("./graphics_video/microbit_acc_1.xlsx")
+
+# Magnetômetro
+microbit_data_0 = pd.read_excel("./graphics_video/microbit_mag_0.xlsx")
+microbit_data_1 = pd.read_excel("./graphics_video/microbit_mag_1.xlsx")
+
 
 get_state_fn = _get_first_state
 all_states = []
@@ -128,7 +134,13 @@ last_states = []
 for mb0, mb1 in zip(microbit_data_0.iterrows(), microbit_data_1.iterrows()):
     i0, data0 = mb0
     i1, data1 = mb1
-    state = get_state_fullgravity2d(data0, data1, last_states=last_states)
+
+    # Acelerômetro
+    # state = get_state_fullgravity2d(data0, data1, last_states=last_states)
+
+    # Magnetômetro
+    state = get_state_main(data0, data1, last_states=last_states)
+
     for n, _state in enumerate(last_states):
         if state.upd_time - _state.upd_time <= TIMESPAN:
             last_states = last_states[n:]
@@ -145,19 +157,40 @@ times = [state.upd_time - all_states[0].upd_time for state in all_states]
 # Angles
 angles_0 = [np.degrees(state.angles[0]) for state in all_states]
 angles_1 = [np.degrees(state.angles[1]) for state in all_states]
-ax_angles.plot(times, angles_0)
-ax_angles.plot(times, angles_1)
+# ax_angles.plot(times, angles_0, label="Articulação 0")
+ax_angles.plot(times, angles_1, label="Articulação 1")
+ax_angles.set_title("Ângulos")
+ax_angles.set_xlabel("Tempo (s)")
+ax_angles.set_ylabel("Ângulo (graus)")
+ax_angles.legend()
+ax_angles.legend(loc="upper right")
+
 
 # Speeds
 speeds_0 = [state.speeds[0] for state in all_states]
 speeds_1 = [state.speeds[1] for state in all_states]
-ax_speeds.plot(times, speeds_0)
-ax_speeds.plot(times, speeds_1)
+# ax_speeds.plot(times, speeds_0, label="Articulação 0")
+ax_speeds.plot(times, speeds_1, label="Articulação 1")
+ax_speeds.set_title("Velocidades Angulares")
+ax_speeds.set_xlabel("Tempo (s)")
+ax_speeds.set_ylabel("Velocidade Angular (rad/s)")
+ax_speeds.legend()
+ax_speeds.legend(loc="upper right")
+
 
 # Accs
 accs_0 = [state.accs[0] for state in all_states]
 accs_1 = [state.accs[1] for state in all_states]
-ax_accs.plot(times, accs_0)
-ax_accs.plot(times, accs_1)
+# ax_accs.plot(times, accs_0, label="Articulação 0")
+ax_accs.plot(times, accs_1, label="Articulação 1")
+ax_accs.set_title("Acelerações Angulares")
+ax_accs.set_xlabel("Tempo (s)")
+ax_accs.set_ylabel("Aceleração Angular (rad/s²)")
+ax_accs.legend()
+ax_accs.legend(loc="upper right")
 
+
+plt.subplots_adjust(hspace=0.5)
+manager = plt.get_current_fig_manager()
+# manager.full_screen_toggle()
 plt.show()
