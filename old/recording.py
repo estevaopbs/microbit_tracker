@@ -140,13 +140,13 @@ def record_microbits(
         time_list.append(now)
         for i, recorder in enumerate(recorders):
             recorder.update()
-            verbose_fn(
-                f"microbit {i}\t{round(((now-start_time)/time_length)*100, 2)}%",
-                "\n",
-                recorder.print_last_data(),
-            )
-        system("cls")
-        verbose_fn(format_data(recorder))
+        #    verbose_fn(
+        #        f"microbit {i}\t{round(((now-start_time)/time_length)*100, 2)}%",
+        #        "\n",
+        #        recorder.print_last_data(),
+        #    )
+        # system("cls")
+        # verbose_fn(format_data(recorder))
         now = time.time()
     for recorder in recorders:
         recorder.data["TIME"] = time_list
