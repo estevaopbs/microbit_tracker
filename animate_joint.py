@@ -5,7 +5,7 @@ from joint_tracker import JointTracker
 import matplotlib.patches as patches
 from copy import deepcopy, copy
 import time
-
+from animate_data import RecordedData
 
 SEGMENTS_COLOR = "#1F77B4"
 SEGMENTS_LINEWIDTH = 2
@@ -35,7 +35,9 @@ def rotate_vector(vec, angle):
 
 
 class JointAnimation:
-    def __init__(self, joint_tracker: JointTracker, lenghts, frames, xyz_lim):
+    def __init__(
+        self, joint_tracker: JointTracker | RecordedData, lenghts, frames, xyz_lim
+    ):
         self.joint_tracker = joint_tracker
         self.lengths = lenghts
         self.articulation_diameter = 0.3
@@ -48,19 +50,11 @@ class JointAnimation:
         self.ax_acc = self.fig.add_subplot(326)
         self.xyz_lim = xyz_lim
         self.states = []
+        self.fig.set_size_inches(19.2, 10.8)
         manager = plt.get_current_fig_manager()
         manager.full_screen_toggle()
         self.ax.set_aspect("equal")
         plt.subplots_adjust(hspace=0.5)
-
-        # self.text = self.ax.text2D(
-        #    0.85,
-        #    0,
-        #    "",
-        #    transform=self.ax.transAxes,
-        #    fontsize=14,
-        #    verticalalignment="top",
-        # )
 
     def update(self, frame):
         self.frame = frame
@@ -165,10 +159,21 @@ class JointAnimation:
         self.ax_speed.set_xlabel("Tempo (s)")
         self.ax_speed.set_ylabel("Velocidade Ângular (rad/s)")
 
-        return
+        return self.ax
 
     def animate(self):
         self.animation = animation.FuncAnimation(
             self.fig, self.update, repeat=False, frames=self.frames
         )
         plt.show()
+
+    def export_animation(self):
+        self.animation = animation.FuncAnimation(
+            self.fig,
+            self.update,
+            repeat=False,
+            frames=len(self.joint_tracker.microbits_data[0]) - 1,
+        )
+        Writer = animation.writers["ffmpeg"]
+        writer = Writer(fps=15.911111111, bitrate=1800)
+        self.animation.save("animation.mp4", writer=writer)

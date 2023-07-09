@@ -73,6 +73,7 @@ class JointTracker:
         self.get_state = self.get_first_state
         self.ArticulationState.get_speeds = lambda x, y: [0 for _ in self.microbits]
         self.ArticulationState.get_accs = lambda x, y: [0 for _ in self.microbits]
+        self.last_angles = None
 
     @property
     def state(self):
@@ -170,4 +171,18 @@ class JointTracker:
         # Atualiza a lista de vetores dessa instância do objeto JointTracker
         self.vectors = vectors
         angles = [angles[0]] + [angle - angles[n] for n, angle in enumerate(angles[1:])]
+        corrected_angles = []
+        if self.last_angles is not None:
+            for angle, last_angle in zip(angles, self.last_angles):
+                if np.degrees(angle) > 200 and np.degrees(last_angle) < 90:
+                    corrected_angles.append(2 * np.pi - angle)
+                elif np.degrees(angle) > 200 and np.degrees(last_angle) < 0:
+                    corrected_angles.append(2 * np.pi - angle)
+                elif np.degrees(angle) < -200 and np.degrees(last_angle) > 0:
+                    corrected_angles.append(2 * np.pi + angle)
+                else:
+                    corrected_angles.append(angle)
+            angles = corrected_angles
+        self.last_angles = angles
+        print(corrected_angles)
         self.get_state(vectors, angles)
