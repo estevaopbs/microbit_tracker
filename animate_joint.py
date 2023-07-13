@@ -32,3 +32,4 @@ class JointAnimation:
             self.fig, self.update, repeat=False, frames=self.frames
         )
         plt.show()
+#
