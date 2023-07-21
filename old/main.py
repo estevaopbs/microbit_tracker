@@ -96,7 +96,7 @@ def update_frame(frame):
     )
     ax.legend()
     ax.set_xlabel("Tempo (s)")
-    ax.set_ylabel("Aceleração Gravitacional (Gaus)")
+    ax.set_ylabel("Aceleração Gravitacional (Gals)")
     acc1.update()
     ax1.plot(
         TIMEAXIS,
@@ -127,7 +127,7 @@ def update_frame(frame):
     )
     ax1.legend()
     ax1.set_xlabel("Tempo (s)")
-    ax1.set_ylabel("Aceleração Gravitacional (Gaus)")
+    ax1.set_ylabel("Aceleração Gravitacional (Gals)")
     return None
 
 
