@@ -194,3 +194,4 @@ plt.subplots_adjust(hspace=0.5)
 manager = plt.get_current_fig_manager()
 # manager.full_screen_toggle()
 plt.show()
+#
